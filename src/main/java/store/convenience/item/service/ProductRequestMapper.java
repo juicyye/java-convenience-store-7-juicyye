@@ -1,6 +1,5 @@
 package store.convenience.item.service;
 
-import store.convenience.item.controller.req.ProductCreateReqDto;
 import store.convenience.item.domain.Item;
 import store.convenience.item.domain.Product;
 import store.convenience.promotion.domain.Promotion;

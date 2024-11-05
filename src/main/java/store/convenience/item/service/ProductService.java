@@ -27,7 +27,7 @@ public class ProductService {
         return productRepository.findByName(itemName);
     }
 
-    public List<ProductInventory> findAll(){
+    public List<ProductInventory> findAll() {
         List<ProductInventory> inventory = new ArrayList<>();
         productRepository.findAll().forEach(
                 p -> inventory.add(new ProductInventory(p))
@@ -35,15 +35,15 @@ public class ProductService {
         return inventory;
     }
 
-    public void addNonPromotionItems(){
+    public void addNonPromotionItems() {
         List<List<Product>> products = productRepository.findAll();
         for (List<Product> product : products) {
             boolean hasPromotion = product.stream().anyMatch(item -> item.getPromotion() != null);
             boolean hasNormal = product.stream().anyMatch(item -> item.getPromotion() == null);
 
-            if(hasPromotion && !hasNormal){
+            if (hasPromotion && !hasNormal) {
                 Item item = product.getFirst().getItem();
-                productRepository.save(mapper.create(item.getName(), 0,null));
+                productRepository.save(mapper.create(item.getName(), 0, null));
             }
         }
     }

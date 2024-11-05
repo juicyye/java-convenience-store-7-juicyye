@@ -65,7 +65,7 @@ class PromotionTest {
         assertThat(result).isEqualTo(expectResult);
     }
 
-    private static Stream<Arguments> providedDate(){
+    private static Stream<Arguments> providedDate() {
         return Stream.of(
                 Arguments.arguments(getDate(2, 1), true),
                 Arguments.arguments(getDate(3, 9), true),
