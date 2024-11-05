@@ -1,0 +1,15 @@
+package store.convenience.item.domain;
+
+import store.convenience.promotion.domain.Promotion;
+
+public class Product {
+    private Item item;
+    private Integer quantity;
+    private Promotion promotion;
+
+    public Product(Item item, Integer quantity, Promotion promotion) {
+        this.item = item;
+        this.quantity = quantity;
+        this.promotion = promotion;
+    }
+}
