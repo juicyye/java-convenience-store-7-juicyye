@@ -10,7 +10,8 @@ public enum ErrorMessage {
 
     ERROR_READING_FILE("파일을 읽는 도중 오류가 발생했습니다. 확인 후 다시 시도해주세요"),
 
-    INVALID_NUMBER_FORMAT("숫자를 입력해주세요")
+    INVALID_NUMBER_FORMAT("숫자를 입력해주세요"),
+    INVALID_INPUT_FORMAT("입력 문자열을 공백일 수 없습니다")
     ;
 
     private final String PREFIX = "[ERROR] ";

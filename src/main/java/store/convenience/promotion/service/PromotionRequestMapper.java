@@ -29,17 +29,12 @@ public class PromotionRequestMapper {
     }
 
 
-    public Promotion create(String promotionInput) {
-        String[] split = splitPromotionInput(promotionInput);
+    public Promotion create(String[] promotionParts) {
         return new Promotion(
-                createPromotionDetails(split[NAME_INDEX], split[BUY_INDEX], split[GET_INDEX]),
-                parseDate(split[START_DATE_INDEX]),
-                parseDate(split[END_DATE_INDEX])
+                createPromotionDetails(promotionParts[NAME_INDEX], promotionParts[BUY_INDEX], promotionParts[GET_INDEX]),
+                parseDate(promotionParts[START_DATE_INDEX]),
+                parseDate(promotionParts[END_DATE_INDEX])
         );
-    }
-
-    private String[] splitPromotionInput(String promotionInput) {
-        return promotionInput.split(DELIMITER);
     }
 
     private PromotionDetails createPromotionDetails(String name, String buy, String get) {

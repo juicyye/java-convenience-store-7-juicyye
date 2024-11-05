@@ -20,4 +20,9 @@ public class PromotionRepositoryImpl implements PromotionRepository {
         return promotions.stream().filter(p -> p.getDetails().name().equals(name)).findFirst();
     }
 
+    @Override
+    public void clear() {
+        promotions.clear();
+    }
+
 }
