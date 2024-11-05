@@ -1,5 +1,6 @@
 package store.convenience.promotion.controller;
 
+import java.nio.file.Path;
 import store.convenience.promotion.service.PromotionService;
 
 public class PromotionController {
@@ -9,4 +10,5 @@ public class PromotionController {
     public PromotionController(PromotionService promotionService) {
         this.promotionService = promotionService;
     }
+
 }
