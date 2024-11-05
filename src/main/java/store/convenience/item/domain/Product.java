@@ -12,4 +12,16 @@ public class Product {
         this.quantity = quantity;
         this.promotion = promotion;
     }
+
+    public Item getItem() {
+        return item;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public Promotion getPromotion() {
+        return promotion;
+    }
 }

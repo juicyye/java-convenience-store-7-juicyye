@@ -1,5 +1,8 @@
 package store.convenience.item.domain;
 
+import store.global.exception.NotFoundException;
+import store.global.util.ErrorMessage;
+
 public enum Item {
     COLA("콜라",1_000),
     CIDER("사이다",1_000),
@@ -11,8 +14,7 @@ public enum Item {
     CHOCO_BAR("초코바",1_200),
     ENERGY_BAR("에너지바",2_000),
     LUNCH_BOX("정식도시락",6_400),
-    CUP_RAMEN("컵라면",1_700),
-    NONE("",0);
+    CUP_RAMEN("컵라면",1_700);
 
     private final String name;
     private final int price;
@@ -26,7 +28,7 @@ public enum Item {
         for (Item value : Item.values()) {
             if(name.equals(value.name)) return value;
         }
-        return NONE;
+        throw new NotFoundException(ErrorMessage.NOT_FOUND_ITEM.getMessage());
     }
 
     public String getName() {

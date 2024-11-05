@@ -4,7 +4,7 @@ import store.convenience.promotion.controller.req.PromotionCreateReqDto;
 import store.convenience.promotion.domain.Promotion;
 import store.convenience.promotion.service.port.PromotionRepository;
 import store.global.util.ErrorMessage;
-import store.global.util.NotFoundException;
+import store.global.exception.NotFoundException;
 
 public class PromotionService {
 
