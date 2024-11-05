@@ -1,7 +1,7 @@
-package store.convenience.item.service;
+package store.convenience.product.service;
 
-import store.convenience.item.domain.Item;
-import store.convenience.item.domain.Product;
+import store.convenience.product.domain.Item;
+import store.convenience.product.domain.Product;
 import store.convenience.promotion.domain.Promotion;
 
 public class ProductRequestMapper {

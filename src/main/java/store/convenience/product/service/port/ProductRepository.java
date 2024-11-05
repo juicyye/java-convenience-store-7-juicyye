@@ -1,7 +1,7 @@
-package store.convenience.item.service.port;
+package store.convenience.product.service.port;
 
 import java.util.List;
-import store.convenience.item.domain.Product;
+import store.convenience.product.domain.Product;
 
 public interface ProductRepository {
 

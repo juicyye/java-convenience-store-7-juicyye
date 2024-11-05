@@ -1,4 +1,4 @@
-package store.convenience.item.domain;
+package store.convenience.product.domain;
 
 import java.util.List;
 

@@ -1,11 +1,11 @@
-package store.convenience.item.repository;
+package store.convenience.product.repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import store.convenience.item.domain.Product;
-import store.convenience.item.service.port.ProductRepository;
+import store.convenience.product.domain.Product;
+import store.convenience.product.service.port.ProductRepository;
 
 public class ProductRepositoryImpl implements ProductRepository {
 

@@ -1,12 +1,12 @@
-package store.convenience.item.service;
+package store.convenience.product.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import store.convenience.item.controller.req.ProductCreateReqDto;
-import store.convenience.item.domain.Item;
-import store.convenience.item.domain.Product;
-import store.convenience.item.domain.ProductInventory;
-import store.convenience.item.service.port.ProductRepository;
+import store.convenience.product.controller.req.ProductCreateReqDto;
+import store.convenience.product.domain.Item;
+import store.convenience.product.domain.Product;
+import store.convenience.product.domain.ProductInventory;
+import store.convenience.product.service.port.ProductRepository;
 import store.convenience.promotion.domain.Promotion;
 
 public class ProductService {

@@ -15,7 +15,7 @@ public class PromotionController {
 
     public void start() {
         List<String> promotionData = Reader.readFiles(StoreConstant.PROMOTION_PATH);
-        promotionData.forEach(p -> promotionService.create(p));
+        promotionData.forEach(promotionService::create);
     }
 
 }

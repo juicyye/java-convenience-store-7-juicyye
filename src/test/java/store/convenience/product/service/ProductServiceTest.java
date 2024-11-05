@@ -1,4 +1,4 @@
-package store.convenience.item.service;
+package store.convenience.product.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -7,12 +7,12 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import store.convenience.item.controller.req.ProductCreateReqDto;
-import store.convenience.item.domain.Item;
-import store.convenience.item.domain.Product;
-import store.convenience.item.domain.ProductInventory;
-import store.convenience.item.repository.ProductRepositoryImpl;
-import store.convenience.item.service.port.ProductRepository;
+import store.convenience.product.controller.req.ProductCreateReqDto;
+import store.convenience.product.domain.Item;
+import store.convenience.product.domain.Product;
+import store.convenience.product.domain.ProductInventory;
+import store.convenience.product.repository.ProductRepositoryImpl;
+import store.convenience.product.service.port.ProductRepository;
 import store.convenience.promotion.domain.Promotion;
 import store.convenience.promotion.domain.PromotionDetails;
 
