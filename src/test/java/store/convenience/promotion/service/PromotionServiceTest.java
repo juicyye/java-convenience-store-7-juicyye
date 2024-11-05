@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import store.convenience.promotion.controller.req.PromotionCreateReqDto;
 import store.convenience.promotion.domain.Promotion;
 import store.convenience.promotion.repository.PromotionRepositoryImpl;
 import store.convenience.promotion.service.port.PromotionRepository;
@@ -25,20 +24,19 @@ class PromotionServiceTest {
     @DisplayName("createDto에 정확한 값이 들어오면 promotion을 생성한다")
     void create() throws Exception {
         // given
-        PromotionCreateReqDto dto = new PromotionCreateReqDto(
-                "name", 3, 6, "2024-01-01", "2024-12-31");
-        promotionService.create(dto);
+        String input = "탄산2+1,2,1,2024-01-01,2024-12-31";
+        promotionService.create(input);
 
         // when
-        Promotion result = promotionService.getPromotion("name");
+        Promotion result = promotionService.getPromotion("탄산2+1");
 
         // then
         assertAll(() -> {
             assertThat(result.getEndDate()).isEqualTo("2024-12-31");
             assertThat(result.getStartDate()).isEqualTo("2024-01-01");
-            assertThat(result.getDetails().name()).isEqualTo("name");
-            assertThat(result.getDetails().bonusQuantity()).isEqualTo(6);
-            assertThat(result.getDetails().purchaseQuantity()).isEqualTo(3);
+            assertThat(result.getDetails().name()).isEqualTo("탄산2+1");
+            assertThat(result.getDetails().bonusQuantity()).isEqualTo(1);
+            assertThat(result.getDetails().purchaseQuantity()).isEqualTo(2);
         });
     }
 

@@ -1,7 +1,9 @@
 package store.convenience.promotion.controller;
 
-import java.nio.file.Path;
+import java.util.List;
 import store.convenience.promotion.service.PromotionService;
+import store.global.util.Reader;
+import store.global.util.StoreConstant;
 
 public class PromotionController {
 
@@ -9,6 +11,11 @@ public class PromotionController {
 
     public PromotionController(PromotionService promotionService) {
         this.promotionService = promotionService;
+    }
+
+    public void start() {
+        List<String> promotionData = Reader.readFiles(StoreConstant.PROMOTION_PATH);
+        promotionData.forEach(p -> promotionService.create(p));
     }
 
 }

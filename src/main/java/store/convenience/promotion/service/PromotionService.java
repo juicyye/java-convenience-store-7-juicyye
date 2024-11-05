@@ -1,10 +1,9 @@
 package store.convenience.promotion.service;
 
-import store.convenience.promotion.controller.req.PromotionCreateReqDto;
 import store.convenience.promotion.domain.Promotion;
 import store.convenience.promotion.service.port.PromotionRepository;
-import store.global.util.ErrorMessage;
 import store.global.exception.NotFoundException;
+import store.global.util.ErrorMessage;
 
 public class PromotionService {
 
@@ -15,8 +14,8 @@ public class PromotionService {
         this.promotionRepository = promotionRepository;
     }
 
-    public void create(PromotionCreateReqDto createReqDto) {
-        promotionRepository.save(mapper.create(createReqDto));
+    public void create(String promotionInput) {
+        promotionRepository.save(mapper.create(promotionInput));
     }
 
     public Promotion getPromotion(String name) {
