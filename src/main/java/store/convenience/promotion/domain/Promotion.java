@@ -5,9 +5,9 @@ import store.global.util.ErrorMessage;
 
 public class Promotion {
 
-    private PromotionDetails details;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private final PromotionDetails details;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
 
     public Promotion(PromotionDetails details, LocalDate startDate, LocalDate endDate) {
         this.details = details;
@@ -23,7 +23,7 @@ public class Promotion {
     }
 
     public boolean isActivePromotion(LocalDate valueDate) {
-        return startDate.isAfter(valueDate) && endDate.isBefore(valueDate);
+        return !valueDate.isBefore(startDate) && !valueDate.isAfter(endDate);
     }
 
     public PromotionDetails getDetails() {
