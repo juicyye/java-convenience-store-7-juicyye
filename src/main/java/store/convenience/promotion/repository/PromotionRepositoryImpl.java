@@ -19,4 +19,5 @@ public class PromotionRepositoryImpl implements PromotionRepository {
     public Optional<Promotion> findByName(String name) {
         return promotions.stream().filter(p -> p.getDetails().name().equals(name)).findFirst();
     }
+
 }

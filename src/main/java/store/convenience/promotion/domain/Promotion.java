@@ -37,4 +37,5 @@ public class Promotion {
     public LocalDate getEndDate() {
         return endDate;
     }
+
 }

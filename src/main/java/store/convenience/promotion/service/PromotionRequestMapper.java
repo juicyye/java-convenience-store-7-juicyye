@@ -20,7 +20,7 @@ public class PromotionRequestMapper {
     }
 
     public Promotion create(PromotionCreateReqDto createReqDto) {
-        ;
+
         return new Promotion(
                 createPromotionDetails(createReqDto),
                 parseDate(createReqDto.startDate()),
@@ -34,9 +34,9 @@ public class PromotionRequestMapper {
 
     private LocalDate parseDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        try{
+        try {
             return LocalDate.parse(date, formatter);
-        }catch (DateTimeParseException e) {
+        } catch (DateTimeParseException e) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_DATE_FORMAT.getMessage());
         }
     }

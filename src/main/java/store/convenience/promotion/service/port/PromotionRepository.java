@@ -9,5 +9,4 @@ public interface PromotionRepository {
 
     Optional<Promotion> findByName(String name);
 
-
 }
