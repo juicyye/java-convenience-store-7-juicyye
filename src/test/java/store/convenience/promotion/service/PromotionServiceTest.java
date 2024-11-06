@@ -16,7 +16,7 @@ class PromotionServiceTest {
 
     @BeforeEach
     void setUp() {
-        PromotionRepository repository = new PromotionRepositoryImpl();
+        PromotionRepository repository = PromotionRepositoryImpl.getInstance();
         promotionService = new PromotionService(repository);
     }
 

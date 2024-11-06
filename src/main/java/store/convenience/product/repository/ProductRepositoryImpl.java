@@ -11,6 +11,14 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     private final Map<String, List<Product>> products = new HashMap<>();
 
+    private static final ProductRepositoryImpl instance = new ProductRepositoryImpl();
+
+    private ProductRepositoryImpl() {}
+
+    public static ProductRepositoryImpl getInstance() {
+        return instance;
+    }
+
     @Override
     public void save(Product product) {
         String itemName = product.getItem().getName();

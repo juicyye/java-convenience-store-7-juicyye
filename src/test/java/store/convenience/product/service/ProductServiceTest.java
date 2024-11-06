@@ -21,10 +21,9 @@ import store.convenience.promotion.service.port.PromotionRepository;
 
 class ProductServiceTest {
 
-    private final ProductRepository productRepository = new ProductRepositoryImpl();
-    private final PromotionRepository promotionRepository = new PromotionRepositoryImpl();
+    private final ProductRepository productRepository = ProductRepositoryImpl.getInstance();
+    private final PromotionRepository promotionRepository = PromotionRepositoryImpl.getInstance();
     private final ProductService productService = new ProductService(productRepository, promotionRepository);
-
 
     @BeforeEach
     void setUp() {

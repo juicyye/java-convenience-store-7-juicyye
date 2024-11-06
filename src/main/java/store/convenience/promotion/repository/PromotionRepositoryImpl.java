@@ -10,6 +10,14 @@ public class PromotionRepositoryImpl implements PromotionRepository {
 
     private final List<Promotion> promotions = new ArrayList<>();
 
+    private static final PromotionRepositoryImpl instance = new PromotionRepositoryImpl();
+
+    public static PromotionRepository getInstance() {
+        return instance;
+    }
+
+    private PromotionRepositoryImpl() {}
+
     @Override
     public void save(Promotion promotion) {
         promotions.add(promotion);
