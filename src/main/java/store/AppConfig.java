@@ -2,11 +2,11 @@ package store;
 
 import store.convenience.product.controller.ProductController;
 import store.convenience.product.controller.ProductMessageFormatter;
-import store.convenience.product.repository.ProductRepositoryImpl;
+import store.convenience.product.infrastructure.ProductRepositoryImpl;
 import store.convenience.product.service.ProductService;
 import store.convenience.product.service.port.ProductRepository;
 import store.convenience.promotion.controller.PromotionController;
-import store.convenience.promotion.repository.PromotionRepositoryImpl;
+import store.convenience.promotion.infrastrcuture.PromotionRepositoryImpl;
 import store.convenience.promotion.service.PromotionService;
 import store.convenience.promotion.service.port.PromotionRepository;
 

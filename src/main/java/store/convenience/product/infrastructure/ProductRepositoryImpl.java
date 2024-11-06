@@ -1,4 +1,4 @@
-package store.convenience.product.repository;
+package store.convenience.product.infrastructure;
 
 import java.util.ArrayList;
 import java.util.HashMap;

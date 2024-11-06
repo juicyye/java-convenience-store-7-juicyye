@@ -26,6 +26,17 @@ public class Promotion {
         return !valueDate.isBefore(startDate) && !valueDate.isAfter(endDate);
     }
 
+    public boolean bonus(int count) {
+        if (details.purchaseQuantity() == count) {
+            return true;
+        }
+        return false;
+    }
+
+    public int totalPromotions() {
+        return details.bonusQuantity() + details.purchaseQuantity();
+    }
+
     public PromotionDetails getDetails() {
         return details;
     }

@@ -1,4 +1,4 @@
-package store.convenience.promotion.repository;
+package store.convenience.promotion.infrastrcuture;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.convenience.promotion.domain.Promotion;
-import store.convenience.promotion.repository.PromotionRepositoryImpl;
+import store.convenience.promotion.infrastrcuture.PromotionRepositoryImpl;
 import store.convenience.promotion.service.port.PromotionRepository;
 
 class PromotionServiceTest {

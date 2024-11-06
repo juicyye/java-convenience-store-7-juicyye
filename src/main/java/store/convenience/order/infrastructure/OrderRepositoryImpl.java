@@ -1,4 +1,4 @@
-package store.convenience.order.repository;
+package store.convenience.order.infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
