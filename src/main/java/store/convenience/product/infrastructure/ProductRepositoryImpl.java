@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import store.convenience.product.domain.Product;
 import store.convenience.product.service.port.ProductRepository;
 
@@ -13,7 +14,8 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     private static final ProductRepositoryImpl instance = new ProductRepositoryImpl();
 
-    private ProductRepositoryImpl() {}
+    private ProductRepositoryImpl() {
+    }
 
     public static ProductRepositoryImpl getInstance() {
         return instance;
@@ -34,12 +36,22 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> findByName(String productName) {
-        return products.get(productName);
+    public Optional<Product> findByNameAndPromotion(String productName) {
+        return products.get(productName).stream()
+                .filter(i -> i.getPromotion() != null)
+                .findFirst();
+    }
+
+    @Override
+    public Optional<Product> findByNameAndNoPromotion(String productName) {
+        return products.get(productName).stream()
+                .filter(i -> i.getPromotion() == null)
+                .findFirst();
     }
 
     @Override
     public void clear() {
         products.clear();
     }
+
 }

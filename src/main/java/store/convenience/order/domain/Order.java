@@ -2,18 +2,32 @@ package store.convenience.order.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import store.convenience.product.domain.Product;
 
 public class Order {
 
-    private List<Product> products = new ArrayList<>();
-    private int count;
-    private int discountPrice;
+    private List<OrderProduct> orderProducts = new ArrayList<>();
+    private Discount discount;
 
-    public Order(List<Product> products, int count, int discountPrice) {
-        this.products = products;
-        this.count = count;
-        this.discountPrice = discountPrice;
+    private Order() {
+    }
+
+    public static Order create(Discount discount, List<OrderProduct> orderProducts) {
+        Order order = new Order();
+        order.discount = discount;
+        for (OrderProduct orderProduct : orderProducts) {
+            order.addOrderProduct(orderProduct);
+        }
+        return order;
+    }
+
+    public void addOrderProduct(OrderProduct orderProduct) {
+        orderProducts.add(orderProduct);
+    }
+
+    public int getTotalPrice(){
+        return orderProducts.stream()
+                .mapToInt(OrderProduct::getOrderPrice)
+                .sum();
     }
 
 }

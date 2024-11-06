@@ -3,6 +3,7 @@ package store.convenience.order.controller;
 import java.util.List;
 import store.convenience.order.controller.input.InputView;
 import store.convenience.order.controller.req.OrderCreateReqDto;
+import store.convenience.order.domain.Discount;
 import store.convenience.order.domain.PromotionCheck;
 import store.convenience.order.service.CheckService;
 import store.convenience.order.service.OrderPromotionService;
@@ -26,26 +27,30 @@ public class OrderController {
 
     public void start(){
         List<OrderCreateReqDto> createReqDtos = inputView.readItems();
-        List<PromotionCheck> checkResults = checkService.checkPromotion(createReqDtos);
-        if(!checkResults.isEmpty()){
-            handlerPromotions(checkResults);
+        List<PromotionCheck> promotionChecks = checkService.checkPromotion(createReqDtos);
+        if(!promotionChecks.isEmpty()){
+            handlerPromotions(promotionChecks);
         }
 
-        boolean memberShip = false;
+        boolean memberShip = hasMemberShip();
+        Discount discount = orderPromotionService.calculateOrderDiscount(promotionChecks, memberShip);
+
+        orderService.order(promotionChecks, discount);
+
+    }
+
+    private boolean hasMemberShip() {
         OutputView.printMembership();
         Command command = inputView.readCommand();
         if (command.equals(Command.ACCEPT)) {
-            memberShip = true;
+            return true;
         }
-
-        orderService.processOrder(checkResults, memberShip);
-
-
+        return false;
     }
 
     private void handlerPromotions(List<PromotionCheck> checkResults) {
         for (PromotionCheck promotionCheck : checkResults) {
-            String itemName = promotionCheck.getItemName();
+            String itemName = promotionCheck.getProduct().getItem().getName();
             int promotionCount = promotionCheck.getBonusItemCount();
             if (promotionCheck.isBonusAvailable()) {
                 handleBonusPromotion(promotionCheck, itemName, promotionCount);

@@ -10,8 +10,6 @@ import store.convenience.product.domain.ProductInventory;
 import store.convenience.product.service.port.ProductRepository;
 import store.convenience.promotion.domain.Promotion;
 import store.convenience.promotion.service.port.PromotionRepository;
-import store.global.exception.NotFoundException;
-import store.global.util.ErrorMessage;
 import store.global.util.Parser;
 
 public class ProductService {
@@ -39,7 +37,7 @@ public class ProductService {
     }
 
     public List<Product> getProducts(String itemName) {
-        return productRepository.findByName(itemName);
+        return productRepository.findByNameAndPromotion(itemName);
     }
 
     public List<ProductInventory> findAll() {

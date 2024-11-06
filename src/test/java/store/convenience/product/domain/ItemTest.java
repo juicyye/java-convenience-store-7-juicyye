@@ -26,7 +26,7 @@ class ItemTest {
         //then
         assertThatThrownBy(() -> Item.of("아무거나"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage(ErrorMessage.NOT_FOUND_ITEM.getMessage());
+                .hasMessage(ErrorMessage.NOT_FOUND_PRODUCT.getMessage());
     }
 
 }

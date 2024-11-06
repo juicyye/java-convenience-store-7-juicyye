@@ -6,10 +6,11 @@ import java.util.List;
 import store.convenience.order.controller.req.OrderCreateReqDto;
 import store.convenience.order.domain.PromotionCheck;
 import store.convenience.order.service.port.DateTimeHolder;
-import store.convenience.product.domain.Item;
 import store.convenience.product.domain.Product;
 import store.convenience.product.service.port.ProductRepository;
 import store.convenience.promotion.domain.PromotionDetails;
+import store.global.exception.NotFoundException;
+import store.global.util.ErrorMessage;
 
 public class CheckService {
 
@@ -26,25 +27,23 @@ public class CheckService {
         List<PromotionCheck> results = new ArrayList<>();
 
         for (OrderCreateReqDto createReqDto : createReqDtos) {
-            List<Product> products = productRepository.findByName(createReqDto.itemName());
-            checkProductPromotion(createReqDto, products, results);
+            Product product = productRepository.findByNameAndPromotion(createReqDto.itemName())
+                    .orElseThrow(() -> new NotFoundException(
+                            ErrorMessage.NOT_FOUND_PRODUCT.getMessage()));
+            checkProductPromotion(createReqDto, product, results);
         }
         return results;
     }
 
-    private void checkProductPromotion(OrderCreateReqDto createReqDto, List<Product> products,
+    private void checkProductPromotion(OrderCreateReqDto createReqDto, Product product,
                                        List<PromotionCheck> results) {
-        for (Product product : products) {
-            PromotionCheck result = checkSinglePromotion(product, createReqDto);
-            if (result != null) {
-                results.add(result);
-            }
-        }
+        PromotionCheck result = checkAndCalculatePromotion(product, createReqDto);
+        results.add(result);
     }
 
-    private PromotionCheck checkSinglePromotion(Product product, OrderCreateReqDto createReqDto) {
+    private PromotionCheck checkAndCalculatePromotion(Product product, OrderCreateReqDto createReqDto) {
         if (!isValidPromotion(product, dateTimeHolder.now().toLocalDate())) {
-            return null;
+            return createCheckResult(product, createReqDto.count(), false, false, false, 0, 0);
         }
 
         PromotionDetails details = product.getPromotion().getDetails();
@@ -52,7 +51,7 @@ public class CheckService {
         int availablePromotions = calculateAvailablePromotions(product.getQuantity(), count, details);
         int bonusCount = count / details.purchaseQuantity() * details.bonusQuantity();
 
-        return calculatePromotionResult(product.getItem(), count, details, bonusCount, availablePromotions);
+        return calculatePromotionResult(product, count, details, bonusCount, availablePromotions);
     }
 
     private boolean isValidPromotion(Product product, LocalDate now) {
@@ -64,22 +63,22 @@ public class CheckService {
         return count - details.totalPromotions() * maxPromotions;
     }
 
-    private PromotionCheck calculatePromotionResult(Item item, int count, PromotionDetails details,
+    private PromotionCheck calculatePromotionResult(Product product, int count, PromotionDetails details,
                                                     int bonusCount, int availablePromotions) {
         if (count == details.purchaseQuantity()) {
-            return createCheckResult(item, count, true, false, details.bonusQuantity(), 0);
+            return createCheckResult(product, count, true, true, false, details.bonusQuantity(), 0);
         }
 
         if (availablePromotions > 0) {
-            return createCheckResult(item, count, false, true, bonusCount, availablePromotions);
+            return createCheckResult(product, count, true, false, true, bonusCount, availablePromotions);
         }
-        return null;
+        return createCheckResult(product, count, true, false, false, 0, 0);
     }
 
-    private PromotionCheck createCheckResult(Item item, int count,
+    private PromotionCheck createCheckResult(Product product, int count, boolean isPromotion,
                                              boolean hasBonus, boolean isExceeded, int bonus, int exceedCount) {
         return new PromotionCheck(
-                item, count,
+                product, count, isPromotion,
                 hasBonus, isExceeded, bonus, exceedCount);
     }
 

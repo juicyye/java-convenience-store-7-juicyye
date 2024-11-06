@@ -1,6 +1,7 @@
 package store.convenience.product.service.port;
 
 import java.util.List;
+import java.util.Optional;
 import store.convenience.product.domain.Product;
 
 public interface ProductRepository {
@@ -9,7 +10,9 @@ public interface ProductRepository {
 
     List<List<Product>> findAll();
 
-    List<Product> findByName(String productName);
+    Optional<Product> findByNameAndPromotion(String productName);
+
+    Optional<Product> findByNameAndNoPromotion(String productName);
 
     void clear();
 

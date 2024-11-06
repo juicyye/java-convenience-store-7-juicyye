@@ -7,7 +7,7 @@ public enum ErrorMessage {
     ERROR_INPUT("잘못된 입력입니다. 다시 입력해 주세요."),
 
     NOT_FOUND_PROMOTION("해당 프로모션을 찾을 수 없습니다."),
-    NOT_FOUND_ITEM("아이템을 찾을 수 없습니다."),
+    NOT_FOUND_PRODUCT("아이템을 찾을 수 없습니다."),
 
     ERROR_READING_FILE("파일을 읽는 도중 오류가 발생했습니다. 확인 후 다시 시도해주세요"),
 

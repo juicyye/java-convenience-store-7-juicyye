@@ -25,6 +25,7 @@ public class OrderPromotionService {
         int membershipDiscount = calculateMembershipDiscount(calculation.totalPrice, hasMembership);
 
         return new Discount(
+                calculation.promotionItems,
                 calculation.totalPrice,
                 calculation.promotionAmount,
                 membershipDiscount
@@ -32,20 +33,20 @@ public class OrderPromotionService {
     }
 
     private OrderCalculation calculateOrderAmounts(List<PromotionCheck> promotionChecks) {
-        List<ItemCount> itemCounts = new ArrayList<>();
+        List<ItemCount> promotionItems = new ArrayList<>();
         int totalPrice = 0;
         int promotionAmount = 0;
 
         for (PromotionCheck check : promotionChecks) {
             Item item = check.getItem();
-            itemCounts.add(new ItemCount(item, check.getBonusItemCount()));
+            promotionItems.add(new ItemCount(item, check.getBonusItemCount()));
 
             int itemPrice = item.getPrice();
             promotionAmount += itemPrice * check.getBonusItemCount();
             totalPrice += itemPrice * check.getCount();
         }
 
-        return new OrderCalculation(itemCounts, totalPrice, promotionAmount);
+        return new OrderCalculation(promotionItems, totalPrice, promotionAmount);
     }
 
     private int calculateMembershipDiscount(int totalPrice, boolean hasMembership) {
@@ -53,13 +54,10 @@ public class OrderPromotionService {
         return (int) Math.min(MAX_MEMBERSHIP_DISCOUNT, totalPrice * MEMBERSHIP_RATE);
     }
 
-
     private record OrderCalculation(
-            List<ItemCount> itemCounts,
+            List<ItemCount> promotionItems,
             int totalPrice,
             int promotionAmount
-    ) {
-
-    }
+    ) {}
 
 }

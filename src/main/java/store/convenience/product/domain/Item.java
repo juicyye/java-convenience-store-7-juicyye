@@ -30,7 +30,7 @@ public enum Item {
                 return value;
             }
         }
-        throw new NotFoundException(ErrorMessage.NOT_FOUND_ITEM.getMessage());
+        throw new NotFoundException(ErrorMessage.NOT_FOUND_PRODUCT.getMessage());
     }
 
     public String getName() {

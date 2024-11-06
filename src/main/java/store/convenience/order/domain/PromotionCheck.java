@@ -1,18 +1,21 @@
 package store.convenience.order.domain;
 
-import store.convenience.product.domain.Item;
+import store.convenience.product.domain.Product;
 
 public class PromotionCheck {
 
-    private Item item;
+    private Product product;
     private int count;
+    private boolean isPromotion;
     private boolean bonusAvailable;
     private boolean isExceeded;
     private int bonusItemCount;
     private int exceededItemCount;
 
-    public PromotionCheck(Item item, int count, boolean bonusAvailable, boolean isExceeded, int bonusItemCount, int exceededItemCount) {
-        this.item = item;
+    public PromotionCheck(Product product, int count, boolean isPromotion,
+                          boolean bonusAvailable, boolean isExceeded, int bonusItemCount,
+                          int exceededItemCount) {
+        this.product = product;
         this.count = count;
         this.bonusAvailable = bonusAvailable;
         this.isExceeded = isExceeded;
@@ -20,20 +23,24 @@ public class PromotionCheck {
         this.exceededItemCount = exceededItemCount;
     }
 
-    public void addBonus(){
+    public void addBonus() {
         this.count += bonusItemCount;
     }
 
-    public void removeCount(){
+    public void removeCount() {
         this.count -= bonusItemCount;
     }
 
-    public Item getItem() {
-        return item;
+    public Product getProduct() {
+        return product;
     }
 
     public int getCount() {
         return count;
+    }
+
+    public boolean isPromotion() {
+        return isPromotion;
     }
 
     public boolean isBonusAvailable() {
@@ -51,5 +58,4 @@ public class PromotionCheck {
     public int getExceededItemCount() {
         return exceededItemCount;
     }
-
 }

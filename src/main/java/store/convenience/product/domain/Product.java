@@ -1,5 +1,6 @@
 package store.convenience.product.domain;
 
+import java.time.LocalDate;
 import store.convenience.promotion.domain.Promotion;
 import store.global.exception.NotEnoughStockException;
 import store.global.util.ErrorMessage;
@@ -21,6 +22,10 @@ public class Product {
             throw new NotEnoughStockException(ErrorMessage.OUT_OF_STOCK.getMessage());
         }
         this.quantity -= count;
+    }
+
+    public boolean isActivatePromotion(LocalDate currentDate) {
+        return promotion.isActivePromotion(currentDate);
     }
 
     public Item getItem() {
