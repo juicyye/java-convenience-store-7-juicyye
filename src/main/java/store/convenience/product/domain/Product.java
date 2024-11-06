@@ -1,6 +1,8 @@
 package store.convenience.product.domain;
 
 import store.convenience.promotion.domain.Promotion;
+import store.global.exception.NotEnoughStockException;
+import store.global.util.ErrorMessage;
 
 public class Product {
     private Item item;
@@ -11,6 +13,14 @@ public class Product {
         this.item = item;
         this.quantity = quantity;
         this.promotion = promotion;
+    }
+
+    public void removeStock(int count) {
+        int restStock = quantity - count;
+        if (restStock < 0) {
+            throw new NotEnoughStockException(ErrorMessage.OUT_OF_STOCK.getMessage());
+        }
+        this.quantity -= count;
     }
 
     public Item getItem() {

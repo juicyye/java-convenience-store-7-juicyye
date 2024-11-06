@@ -10,8 +10,6 @@ import store.global.util.Parser;
 
 public class ProductRequestMapper {
 
-
-
     private static final ProductRequestMapper instance = new ProductRequestMapper();
 
     private ProductRequestMapper() {
