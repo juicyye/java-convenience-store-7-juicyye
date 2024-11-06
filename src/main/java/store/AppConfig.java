@@ -1,5 +1,15 @@
 package store;
 
+import store.convenience.order.controller.OrderController;
+import store.convenience.order.controller.input.InputHandler;
+import store.convenience.order.controller.input.InputView;
+import store.convenience.order.infrastructure.OrderRepositoryImpl;
+import store.convenience.order.infrastructure.StoreDateTimeHolder;
+import store.convenience.order.service.CheckService;
+import store.convenience.order.service.OrderPromotionService;
+import store.convenience.order.service.OrderService;
+import store.convenience.order.service.port.DateTimeHolder;
+import store.convenience.order.service.port.OrderRepository;
 import store.convenience.product.controller.ProductController;
 import store.convenience.product.controller.ProductMessageFormatter;
 import store.convenience.product.infrastructure.ProductRepositoryImpl;
@@ -16,40 +26,76 @@ public class AppConfig {
      * Controller
      */
 
-    public ProductController productController(){
+    public ProductController productController() {
         return new ProductController(productService(), productMessageFormatter());
     }
 
-    public PromotionController promotionController(){
+    public PromotionController promotionController() {
         return new PromotionController(promotionService());
     }
 
-    private ProductMessageFormatter productMessageFormatter(){
-        return new ProductMessageFormatter();
+    public OrderController orderController() {
+        return new OrderController(orderService(), inputView(), checkService(),orderPromotionService());
     }
 
     /**
      * Service
      */
 
-    private ProductService productService(){
-        return new ProductService(productRepository(),promotionRepository());
+    private ProductService productService() {
+        return new ProductService(productRepository(), promotionRepository());
     }
 
-    private PromotionService promotionService(){
+    private PromotionService promotionService() {
         return new PromotionService(promotionRepository());
+    }
+
+    private OrderService orderService() {
+        return new OrderService(orderRepository(), productRepository());
+    }
+
+    private CheckService checkService(){
+        return new CheckService(productRepository(), dateTimeHolder());
+    }
+
+    private OrderPromotionService orderPromotionService(){
+        return new OrderPromotionService();
     }
 
     /**
      * Repository
      */
 
-    private ProductRepository productRepository(){
+    private ProductRepository productRepository() {
         return ProductRepositoryImpl.getInstance();
     }
 
-    private PromotionRepository promotionRepository(){
+    private PromotionRepository promotionRepository() {
         return PromotionRepositoryImpl.getInstance();
+    }
+
+    private OrderRepository orderRepository() {
+        return OrderRepositoryImpl.getInstance();
+    }
+
+    /**
+     * 기타
+     */
+
+    private ProductMessageFormatter productMessageFormatter() {
+        return new ProductMessageFormatter();
+    }
+
+    private DateTimeHolder dateTimeHolder(){
+        return new StoreDateTimeHolder();
+    }
+
+    private InputHandler inputHandler(){
+        return new InputHandler();
+    }
+
+    private InputView inputView(){
+        return new InputView(inputHandler());
     }
 
 }

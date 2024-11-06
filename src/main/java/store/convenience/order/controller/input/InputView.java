@@ -1,7 +1,8 @@
-package store.convenience.order.controller;
+package store.convenience.order.controller.input;
 
 import camp.nextstep.edu.missionutils.Console;
 import java.util.List;
+import store.convenience.order.controller.Command;
 import store.convenience.order.controller.req.OrderCreateReqDto;
 
 public class InputView {
@@ -14,15 +15,11 @@ public class InputView {
 
     public List<OrderCreateReqDto> readItems() {
         System.out.println("구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])");
-        List<OrderCreateReqDto> createReqDtos = inputHandler.parseOrderRequests(Console.readLine());
-        close();
-        return createReqDtos;
+        return inputHandler.parseOrderRequests(Console.readLine());
     }
 
     public Command readCommand(){
-        Command command = inputHandler.parseIntention(Console.readLine());
-        close();
-        return command;
+        return inputHandler.parseIntention(Console.readLine());
     }
 
     private void close(){

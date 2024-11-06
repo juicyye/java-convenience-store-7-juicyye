@@ -1,7 +1,7 @@
 package store.convenience.order.service;
 
 import java.util.List;
-import store.convenience.order.controller.req.OrderCreateReqDto;
+import store.convenience.order.domain.PromotionCheck;
 import store.convenience.order.domain.Order;
 import store.convenience.order.service.port.OrderRepository;
 import store.convenience.product.domain.Product;
@@ -19,11 +19,11 @@ public class OrderService {
         this.productRepository = productRepository;
     }
 
-    public void processOrder(List<OrderCreateReqDto> orderCreateReqDtos) {
-        for (OrderCreateReqDto createReqDto : orderCreateReqDtos) {
-            List<Product> products = productRepository.findByName(createReqDto.itemName());
-            adjustStock(createReqDto.count(), products);
-            orderRepository.save(new Order(products, createReqDto.count(),0));
+    public void processOrder(List<PromotionCheck> checkResults, boolean memberShip) {
+        for (PromotionCheck checkResult : checkResults) {
+            List<Product> products = productRepository.findByName(checkResult.getItemName());
+            adjustStock(checkResult.getCount(), products);
+            orderRepository.save(new Order(products, checkResult.getCount(),0));
         }
     }
 

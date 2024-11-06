@@ -1,7 +1,6 @@
 package store.convenience.order.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.convenience.order.controller.req.OrderCreateReqDto;
-import store.convenience.order.controller.resp.PromotionCheckResult;
+import store.convenience.order.domain.PromotionCheck;
 import store.convenience.product.domain.Item;
 import store.convenience.product.domain.Product;
 import store.convenience.product.infrastructure.ProductRepositoryImpl;
@@ -56,13 +55,13 @@ class CheckServiceTest {
         OrderCreateReqDto createReqDto = new OrderCreateReqDto("콜라", 10);
 
         // when
-        List<PromotionCheckResult> result = checkService.checkPromotion(List.of(createReqDto));
+        List<PromotionCheck> result = checkService.checkPromotion(List.of(createReqDto));
 
         // then
         assertThat(result).hasSize(1)
-                .extracting(PromotionCheckResult::count, PromotionCheckResult::isExceeded, PromotionCheckResult::freeItemCount)
+                .extracting(PromotionCheck::getCount, PromotionCheck::isExceeded, PromotionCheck::getBonusItemCount)
                 .containsExactlyInAnyOrder(
-                        Tuple.tuple(10,true,4)
+                        Tuple.tuple(10, true, 4)
                 );
     }
 
@@ -73,11 +72,11 @@ class CheckServiceTest {
         OrderCreateReqDto createReqDto = new OrderCreateReqDto("오렌지주스", 1);
 
         // when
-        List<PromotionCheckResult> result = checkService.checkPromotion(List.of(createReqDto));
+        List<PromotionCheck> result = checkService.checkPromotion(List.of(createReqDto));
 
         // then
         assertThat(result).hasSize(1)
-                .extracting(PromotionCheckResult::bonusAvailable, PromotionCheckResult::freeItemCount)
+                .extracting(PromotionCheck::isBonusAvailable, PromotionCheck::getBonusItemCount)
                 .containsExactlyInAnyOrder(Tuple.tuple(true, 1));
     }
 

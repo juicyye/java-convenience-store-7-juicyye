@@ -1,4 +1,4 @@
-package store.convenience.order.controller;
+package store.convenience.order.controller.input;
 
 import static store.global.util.StoreConstant.COUNT_INDEX;
 import static store.global.util.StoreConstant.NAME_INDEX;
@@ -6,6 +6,7 @@ import static store.global.util.StoreConstant.NAME_INDEX;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import store.convenience.order.controller.Command;
 import store.convenience.order.controller.req.OrderCreateReqDto;
 import store.global.util.ErrorMessage;
 import store.global.util.Parser;

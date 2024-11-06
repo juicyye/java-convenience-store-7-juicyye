@@ -15,4 +15,7 @@ public abstract class StoreConstant {
 
     public static final String ITEM_PATTERN = "\\[([가-힣]+)-([0-9]+)\\]";
 
+    public static final int MAX_MEMBERSHIP_DISCOUNT = 8000;
+    public static final double MEMBERSHIP_RATE = 0.3;
+
 }

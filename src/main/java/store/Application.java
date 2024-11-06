@@ -1,5 +1,6 @@
 package store;
 
+import store.convenience.order.controller.OrderController;
 import store.convenience.product.controller.ProductController;
 import store.convenience.promotion.controller.PromotionController;
 
@@ -13,6 +14,9 @@ public class Application {
 
         ProductController productController = appConfig.productController();
         productController.start();
+
+        OrderController orderController = appConfig.orderController();
+        orderController.start();
     }
 
 }

@@ -4,8 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import store.convenience.order.controller.req.OrderCreateReqDto;
-import store.convenience.order.controller.resp.PromotionCheckResult;
+import store.convenience.order.domain.PromotionCheck;
 import store.convenience.order.service.port.DateTimeHolder;
+import store.convenience.product.domain.Item;
 import store.convenience.product.domain.Product;
 import store.convenience.product.service.port.ProductRepository;
 import store.convenience.promotion.domain.PromotionDetails;
@@ -21,8 +22,8 @@ public class CheckService {
         this.dateTimeHolder = dateTimeHolder;
     }
 
-    public List<PromotionCheckResult> checkPromotion(List<OrderCreateReqDto> createReqDtos) {
-        List<PromotionCheckResult> results = new ArrayList<>();
+    public List<PromotionCheck> checkPromotion(List<OrderCreateReqDto> createReqDtos) {
+        List<PromotionCheck> results = new ArrayList<>();
 
         for (OrderCreateReqDto createReqDto : createReqDtos) {
             List<Product> products = productRepository.findByName(createReqDto.itemName());
@@ -32,16 +33,16 @@ public class CheckService {
     }
 
     private void checkProductPromotion(OrderCreateReqDto createReqDto, List<Product> products,
-                                       List<PromotionCheckResult> results) {
+                                       List<PromotionCheck> results) {
         for (Product product : products) {
-            PromotionCheckResult result = checkSinglePromotion(product, createReqDto);
+            PromotionCheck result = checkSinglePromotion(product, createReqDto);
             if (result != null) {
                 results.add(result);
             }
         }
     }
 
-    private PromotionCheckResult checkSinglePromotion(Product product, OrderCreateReqDto createReqDto) {
+    private PromotionCheck checkSinglePromotion(Product product, OrderCreateReqDto createReqDto) {
         if (!isValidPromotion(product, dateTimeHolder.now().toLocalDate())) {
             return null;
         }
@@ -49,8 +50,9 @@ public class CheckService {
         PromotionDetails details = product.getPromotion().getDetails();
         int count = createReqDto.count();
         int availablePromotions = calculateAvailablePromotions(product.getQuantity(), count, details);
+        int bonusCount = count / details.purchaseQuantity() * details.bonusQuantity();
 
-        return calculatePromotionResult(createReqDto.itemName(), count, details, availablePromotions);
+        return calculatePromotionResult(product.getItem(), count, details, bonusCount, availablePromotions);
     }
 
     private boolean isValidPromotion(Product product, LocalDate now) {
@@ -62,23 +64,23 @@ public class CheckService {
         return count - details.totalPromotions() * maxPromotions;
     }
 
-    private PromotionCheckResult calculatePromotionResult(String itemName, int count, PromotionDetails details,
-                                                          int availablePromotions) {
+    private PromotionCheck calculatePromotionResult(Item item, int count, PromotionDetails details,
+                                                    int bonusCount, int availablePromotions) {
         if (count == details.purchaseQuantity()) {
-            return createCheckResult(itemName, count, true, false, details.bonusQuantity());
+            return createCheckResult(item, count, true, false, details.bonusQuantity(), 0);
         }
 
         if (availablePromotions > 0) {
-            return createCheckResult(itemName, count, false, true, availablePromotions);
+            return createCheckResult(item, count, false, true, bonusCount, availablePromotions);
         }
         return null;
     }
 
-    private PromotionCheckResult createCheckResult(String itemName, int count,
-                                                   boolean hasBonus, boolean isExceeded, int bonus) {
-        return new PromotionCheckResult(
-                itemName, count,
-                hasBonus, isExceeded, bonus);
+    private PromotionCheck createCheckResult(Item item, int count,
+                                             boolean hasBonus, boolean isExceeded, int bonus, int exceedCount) {
+        return new PromotionCheck(
+                item, count,
+                hasBonus, isExceeded, bonus, exceedCount);
     }
 
 }
