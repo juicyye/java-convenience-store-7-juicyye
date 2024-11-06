@@ -5,4 +5,7 @@ public record PromotionDetails(
         int purchaseQuantity,
         int bonusQuantity
 ) {
+    public int totalPromotions() {
+        return bonusQuantity() + purchaseQuantity();
+    }
 }

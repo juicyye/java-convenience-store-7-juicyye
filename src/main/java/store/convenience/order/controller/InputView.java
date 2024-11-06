@@ -19,6 +19,12 @@ public class InputView {
         return createReqDtos;
     }
 
+    public Command readCommand(){
+        Command command = inputHandler.parseIntention(Console.readLine());
+        close();
+        return command;
+    }
+
     private void close(){
         Console.close();
     }

@@ -1,10 +1,13 @@
 package store.convenience.order.controller;
 
-import static store.global.util.StoreConstant.*;
+import static store.global.util.StoreConstant.COUNT_INDEX;
+import static store.global.util.StoreConstant.NAME_INDEX;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import store.convenience.order.controller.req.OrderCreateReqDto;
+import store.global.util.ErrorMessage;
 import store.global.util.Parser;
 import store.global.util.StoreConstant;
 
@@ -19,7 +22,9 @@ public class InputHandler {
 
     private void parseOrderData(String[] dataSegments, List<OrderCreateReqDto> createReqDtos) {
         for (String data : dataSegments) {
-            String[] orderParts = Parser.splitByDash(data);
+            validateFormat(data);
+            String input = data.replaceAll("[\\[\\]]", "");
+            String[] orderParts = Parser.splitByDash(input);
             createOrderDto(createReqDtos, orderParts);
         }
     }
@@ -31,4 +36,13 @@ public class InputHandler {
         createReqDtos.add(createReqDto);
     }
 
+    private void validateFormat(String input) {
+        if (!Pattern.matches(StoreConstant.ITEM_PATTERN,input)) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT_FORMAT.getMessage());
+        }
+    }
+
+    public Command parseIntention(String input) {
+        return Command.of(input);
+    }
 }

@@ -33,10 +33,6 @@ public class Promotion {
         return false;
     }
 
-    public int totalPromotions() {
-        return details.bonusQuantity() + details.purchaseQuantity();
-    }
-
     public PromotionDetails getDetails() {
         return details;
     }

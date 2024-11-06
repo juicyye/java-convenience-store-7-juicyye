@@ -12,4 +12,7 @@ public abstract class StoreConstant {
     public static final int NAME_INDEX = 0;
     public static final int QUANTITY_INDEX = 2;
     public static final int COUNT_INDEX = 1;
+
+    public static final String ITEM_PATTERN = "\\[([가-힣]+)-([0-9]+)\\]";
+
 }
