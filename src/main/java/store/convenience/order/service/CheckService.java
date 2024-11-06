@@ -64,22 +64,20 @@ public class CheckService {
 
     private PromotionCheckResult calculatePromotionResult(String itemName, int count, PromotionDetails details,
                                                           int availablePromotions) {
-        if (count < details.purchaseQuantity()) {
-            return createCheckResult(itemName, count, false, false, false, 0);
-        }
         if (count == details.purchaseQuantity()) {
-            return createCheckResult(itemName, count, true, true, false, details.bonusQuantity());
+            return createCheckResult(itemName, count, true, false, details.bonusQuantity());
         }
+
         if (availablePromotions > 0) {
-            return createCheckResult(itemName, count, true, false, true, availablePromotions);
+            return createCheckResult(itemName, count, false, true, availablePromotions);
         }
         return null;
     }
 
-    private PromotionCheckResult createCheckResult(String itemName, int count, boolean isPromotion,
+    private PromotionCheckResult createCheckResult(String itemName, int count,
                                                    boolean hasBonus, boolean isExceeded, int bonus) {
         return new PromotionCheckResult(
-                itemName, count, isPromotion,
+                itemName, count,
                 hasBonus, isExceeded, bonus);
     }
 

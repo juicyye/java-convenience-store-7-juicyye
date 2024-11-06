@@ -22,6 +22,18 @@ public class OrderController {
     public void start(){
         List<OrderCreateReqDto> createReqDtos = inputView.readItems();
         List<PromotionCheckResult> checkResults = checkService.checkPromotion(createReqDtos);
+        if(!checkResults.isEmpty()){
+            for (PromotionCheckResult checkResult : checkResults) {
+                if (checkResult.bonusAvailable()) {
+                    OutputView.printPromotion(checkResult.itemName(), checkResult.freeItemCount());
+                    Command command = inputView.readCommand();
+                }
+                if (checkResult.isExceeded()) {
+                    OutputView.printOverPromotionPurchase(checkResult.itemName(), checkResult.freeItemCount());
+                    Command command = inputView.readCommand();
+                }
+            }
+        }
 
 
     }

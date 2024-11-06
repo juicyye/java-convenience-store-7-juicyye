@@ -1,7 +1,6 @@
 package store.convenience.order.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
@@ -78,23 +77,8 @@ class CheckServiceTest {
 
         // then
         assertThat(result).hasSize(1)
-                .extracting(PromotionCheckResult::hasBonus, PromotionCheckResult::freeItemCount)
+                .extracting(PromotionCheckResult::bonusAvailable, PromotionCheckResult::freeItemCount)
                 .containsExactlyInAnyOrder(Tuple.tuple(true, 1));
-    }
-
-    @Test
-    @DisplayName("프로모션 구매 조건에 충족하지 못하면 알려준다")
-    void notFulfillTheRequirements() throws Exception {
-        // given
-        OrderCreateReqDto createReqDto = new OrderCreateReqDto("콜라", 1);
-
-        // when
-        List<PromotionCheckResult> result = checkService.checkPromotion(List.of(createReqDto));
-
-        // then
-        assertThat(result).hasSize(1)
-                .extracting(PromotionCheckResult::isPromotion, PromotionCheckResult::freeItemCount)
-                .containsExactlyInAnyOrder(Tuple.tuple(false,0));
     }
 
     private LocalDate getDate() {

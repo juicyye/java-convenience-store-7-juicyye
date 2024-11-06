@@ -1,5 +1,7 @@
 package store.global.util;
 
+import store.convenience.order.controller.resp.PromotionCheckResult;
+
 public class OutputView {
 
     public static void printGreeting() {
@@ -14,11 +16,11 @@ public class OutputView {
         System.out.println("\n" + message);
     }
 
-    public static void printOverPromotionPurchase() {
+    public static void printOverPromotionPurchase(String itemName, int overQty) {
         System.out.println(String.format("현재 %s %d개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)"));
     }
 
-    public static void printPromotion(){
+    public static void printPromotion(String itemName, int bonusQty){
         System.out.println(String.format("현재 %s은(는) %d개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)"));
     }
 
