@@ -37,19 +37,19 @@ public class OrderController {
 
     public void start() {
         do {
-            inputProcessor.execute(() -> {
+            try{
                 showProductInventory();
                 List<OrderCreateReqDto> createReqDtos = purchaseOrderItem();
                 List<OrderCreateReqDto> updatedCreateReqDtos = new ArrayList<>();
                 processPromotions(createReqDtos, updatedCreateReqDtos);
-
                 orderService.process(updatedCreateReqDtos, hasMemberShip());
                 List<Order> orders = orderService.getAllOrders();
                 printReceipt(orders);
-                return null;
-            });
-
+            }catch (RuntimeException e) {
+                OutputView.printErrorMessage(e.getMessage());
+            }
         } while (processRepurchase());
+        inputView.close();
     }
 
     private void showProductInventory() {
@@ -63,7 +63,8 @@ public class OrderController {
         return inputProcessor.execute(inputView::readItems);
     }
 
-    private void processPromotions(List<OrderCreateReqDto> createReqDtos, List<OrderCreateReqDto> updatedCreateReqDtos) {
+    private void processPromotions(List<OrderCreateReqDto> createReqDtos,
+                                   List<OrderCreateReqDto> updatedCreateReqDtos) {
         for (OrderCreateReqDto createReqDto : createReqDtos) {
             if (orderPromotionService.checkPromotion(createReqDto)) {
                 createReqDto = handlerPromotions(createReqDto);
@@ -79,17 +80,16 @@ public class OrderController {
         }
         int bonusCount = orderPromotionService.isEligibleForBonus(createReqDto);
         if (bonusCount > 0) {
-            return handleBonusPromotion(createReqDto,bonusCount);
+            return handleBonusPromotion(createReqDto, bonusCount);
         }
         return createReqDto;
     }
 
-    private OrderCreateReqDto handleExceededPromotion(OrderCreateReqDto createReqDto, int promotionCount) {
-        OutputView.printOverPromotionPurchase(createReqDto.itemName(), promotionCount);
+    private OrderCreateReqDto handleExceededPromotion(OrderCreateReqDto createReqDto, int exceededCount) {
+        OutputView.printOverPromotionPurchase(createReqDto.itemName(), exceededCount);
         Command command = inputView.readCommand();
-        if (command.equals(Command.ACCEPT)) {
-            //todo
-            throw new IllegalArgumentException("Exceeded promotion");
+        if (command.equals(Command.REJECT)) {
+            return orderAdjustmentService.applyBonus(createReqDto,exceededCount);
         }
         return createReqDto;
     }

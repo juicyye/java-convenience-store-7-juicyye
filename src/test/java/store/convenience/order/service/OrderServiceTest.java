@@ -1,6 +1,7 @@
 package store.convenience.order.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import java.time.LocalDate;
@@ -21,6 +22,8 @@ import store.convenience.product.infrastructure.ProductRepositoryImpl;
 import store.convenience.product.service.port.ProductRepository;
 import store.convenience.promotion.domain.Promotion;
 import store.convenience.promotion.domain.PromotionDetails;
+import store.global.exception.NotEnoughStockException;
+import store.global.util.ErrorMessage;
 
 class OrderServiceTest {
 
@@ -34,9 +37,11 @@ class OrderServiceTest {
     void setUp() {
         Promotion promotion = new Promotion(getDetails("탄산2+1", 2, 1), getDate(), getDate());
         Promotion promotion2 = new Promotion(getDetails("오렌지주스", 1, 1), getDate(), getDate());
-        Product product = new Product(Item.COLA, 7, promotion);
+        Product colaPromotion = new Product(Item.COLA, 7, promotion);
+        Product colaNoPromotion = new Product(Item.COLA, 1, null);
         Product product2 = new Product(Item.ORANGE_JUICE, 9, promotion2);
-        productRepository.save(product);
+        productRepository.save(colaPromotion);
+        productRepository.save(colaNoPromotion);
         productRepository.save(product2);
     }
 
@@ -85,6 +90,18 @@ class OrderServiceTest {
                 .containsExactlyInAnyOrder(
                         tuple(3600, (int) Math.floor(3600 * 0.3) / 100 * 100,4600)
                 );
+    }
+
+    @Test
+    @DisplayName("재고 수량을 초과하여 주문하면 에러를 반환한다")
+    void overStockError() throws Exception {
+        // given
+        List<OrderCreateReqDto> request = List.of(createReqDto("콜라", 10, getDate()));
+
+        // then
+        assertThatThrownBy(() -> orderService.process(request, true))
+                .isInstanceOf(NotEnoughStockException.class)
+                .hasMessage(ErrorMessage.OUT_OF_STOCK.getMessage());
     }
 
     private OrderCreateReqDto createReqDto(String itemName, int count, LocalDate date) {

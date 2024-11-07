@@ -26,19 +26,27 @@ public class OrderPromotionService {
     }
 
     public int isEligibleForBonus(OrderCreateReqDto createReqDto) {
-        Product product = getProduct(createReqDto.itemName());
-        return product.getPromotion().isBonusApplicable(createReqDto.count());
+        if(checkPromotion(createReqDto)) {
+            Product product = getProduct(createReqDto.itemName());
+            return product.getPromotion().isBonusApplicable(createReqDto.count());
+        }
+        return 0;
     }
 
     public int calculateBonusQuantity(OrderCreateReqDto createReqDto) {
-        Product product = getProduct(createReqDto.itemName());
-        return product.getPromotion().calculateBonusQuantity(createReqDto.count(), product.getQuantity());
+        if (checkPromotion(createReqDto)) {
+            Product product = getProduct(createReqDto.itemName());
+            return product.getPromotion().calculateBonusQuantity(createReqDto.count(), product.getQuantity());
+        }
+        return 0;
     }
 
     public int calculateExcessQuantity(OrderCreateReqDto createReqDto) {
-        Product product = getProduct(createReqDto.itemName());
-        if (createReqDto.count() > product.getQuantity()) {
-            return calculateExceeded(createReqDto.count(), product);
+        if(checkPromotion(createReqDto)) {
+            Product product = getProduct(createReqDto.itemName());
+            if (createReqDto.count() > product.getQuantity()) {
+                return calculateExceeded(createReqDto.count(), product);
+            }
         }
         return 0;
     }

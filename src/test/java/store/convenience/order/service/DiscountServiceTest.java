@@ -53,7 +53,6 @@ class DiscountServiceTest {
         assertAll(() -> {
             assertThat(discount.getPromotionDiscount()).isEqualTo(expect);
         });
-
     }
 
     private static Stream<Arguments> providedOrderData(){

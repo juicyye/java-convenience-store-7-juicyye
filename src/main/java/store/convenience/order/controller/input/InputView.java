@@ -22,7 +22,7 @@ public class InputView {
         return inputHandler.parseIntention(Console.readLine());
     }
 
-    private void close(){
+    public void close(){
         Console.close();
     }
 

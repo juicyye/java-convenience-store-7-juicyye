@@ -8,6 +8,11 @@ public class OrderAdjustmentService {
         return applyQuantityAdjustment(createReqDto, bonusCount);
     }
 
+
+    private OrderCreateReqDto excludeExceededQuantity(OrderCreateReqDto createReqDto, int exceededQuantity) {
+        return applyQuantityAdjustment(createReqDto, -exceededQuantity);
+    }
+
     private OrderCreateReqDto applyQuantityAdjustment(OrderCreateReqDto createReqDto, int adjustmentCount) {
         return new OrderCreateReqDto(
                 createReqDto.itemName(),
