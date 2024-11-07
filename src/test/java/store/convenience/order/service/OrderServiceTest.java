@@ -48,10 +48,10 @@ class OrderServiceTest {
 
     @Test
     @DisplayName("올바른 값을 입력하면 주문을 할 수 있다")
-    void createOrder() throws Exception {
+    void createProcess() throws Exception {
         // given
         List<OrderCreateReqDto> request = List.of(createReqDto("오렌지주스", 4, getDate()));
-        orderService.order(request, true);
+        orderService.process(request, true);
 
         // when
         List<Order> results = orderRepository.findAll();
@@ -73,7 +73,7 @@ class OrderServiceTest {
     void getDiscount() throws Exception {
         // given
         List<OrderCreateReqDto> request = List.of(createReqDto("오렌지주스", 4, getDate()));
-        orderService.order(request, true);
+        orderService.process(request, true);
 
         // when
         List<Order> results = orderRepository.findAll();

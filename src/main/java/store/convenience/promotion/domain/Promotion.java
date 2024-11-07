@@ -13,11 +13,11 @@ public class Promotion {
         this.details = details;
         this.startDate = startDate;
         this.endDate = endDate;
-        validateDate(startDate,endDate);
+        validateDate(startDate, endDate);
     }
 
     private void validateDate(LocalDate startDate, LocalDate endDate) {
-        if(endDate.isBefore(startDate)) {
+        if (endDate.isBefore(startDate)) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_END_DATE.getMessage());
         }
     }
@@ -26,27 +26,33 @@ public class Promotion {
         return !valueDate.isBefore(startDate) && !valueDate.isAfter(endDate);
     }
 
-    public int calculateBonusQuantity(int orderCount,int quantity) {
-        int purchaseQuantity = details.purchaseQuantity();
+    public int calculateBonusQuantity(int orderCount, int quantity) {
         int bonusQuantity = details.bonusQuantity();
         int availableCount = Math.min(orderCount, quantity);
+        return availableCount / totalPromotions() * bonusQuantity;
+    }
 
-        if (isSinglePurchaseWithOddOrder(availableCount, purchaseQuantity)) {
-            return bonusQuantity;
+    public int isBonusApplicable(int orderCount) {
+        int purchaseQuantity = details.purchaseQuantity();
+        int bonusQuantity = details.bonusQuantity();
+        if (purchaseQuantity == 1) {
+            return isSinglePurchaseWithOddOrder(orderCount,bonusQuantity);
         }
+        return isEligibleForPromotion(orderCount, purchaseQuantity,bonusQuantity);
+    }
 
-        if (isEligibleForPromotion(availableCount, purchaseQuantity)) {
+    private int isSinglePurchaseWithOddOrder(int orderCount,int bonusQuantity) {
+        if (orderCount % 2 == 1) {
             return bonusQuantity;
         }
         return 0;
     }
 
-    private boolean isSinglePurchaseWithOddOrder(int orderCount, int purchaseQuantity) {
-        return purchaseQuantity == 1 && orderCount % 2 == 1;
-    }
-
-    private boolean isEligibleForPromotion(int orderCount, int purchaseQuantity) {
-        return (orderCount - purchaseQuantity) % totalPromotions() == 0;
+    private int isEligibleForPromotion(int orderCount, int purchaseQuantity, int bonusQuantity) {
+        if ((orderCount - purchaseQuantity) % totalPromotions() == 0) {
+            return bonusQuantity;
+        }
+        return 0;
     }
 
     public int totalPromotions() {
@@ -64,5 +70,6 @@ public class Promotion {
     public LocalDate getEndDate() {
         return endDate;
     }
+
 
 }

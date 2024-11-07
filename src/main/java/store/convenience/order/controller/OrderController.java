@@ -41,16 +41,15 @@ public class OrderController {
                 showProductInventory();
                 List<OrderCreateReqDto> createReqDtos = purchaseOrderItem();
                 List<OrderCreateReqDto> updatedCreateReqDtos = new ArrayList<>();
-                extracted(createReqDtos, updatedCreateReqDtos);
+                processPromotions(createReqDtos, updatedCreateReqDtos);
 
-                orderService.order(updatedCreateReqDtos, hasMemberShip());
+                orderService.process(updatedCreateReqDtos, hasMemberShip());
                 List<Order> orders = orderService.getAllOrders();
                 printReceipt(orders);
                 return null;
             });
 
         } while (processRepurchase());
-
     }
 
     private void showProductInventory() {
@@ -64,16 +63,13 @@ public class OrderController {
         return inputProcessor.execute(inputView::readItems);
     }
 
-    private void extracted(List<OrderCreateReqDto> createReqDtos, List<OrderCreateReqDto> updatedCreateReqDtos) {
-        inputProcessor.execute(() -> {
-            for (OrderCreateReqDto createReqDto : createReqDtos) {
-                if (orderPromotionService.checkPromotion(createReqDto)) {
-                    createReqDto = handlerPromotions(createReqDto);
-                }
-                updatedCreateReqDtos.add(createReqDto);
+    private void processPromotions(List<OrderCreateReqDto> createReqDtos, List<OrderCreateReqDto> updatedCreateReqDtos) {
+        for (OrderCreateReqDto createReqDto : createReqDtos) {
+            if (orderPromotionService.checkPromotion(createReqDto)) {
+                createReqDto = handlerPromotions(createReqDto);
             }
-            return null;
-        });
+            updatedCreateReqDtos.add(createReqDto);
+        }
     }
 
     private OrderCreateReqDto handlerPromotions(OrderCreateReqDto createReqDto) {
@@ -81,20 +77,9 @@ public class OrderController {
         if (exceededCount > 0) {
             return handleExceededPromotion(createReqDto, exceededCount);
         }
-
-        int bonusCount = orderPromotionService.calculateBonusQuantity(createReqDto);
+        int bonusCount = orderPromotionService.isEligibleForBonus(createReqDto);
         if (bonusCount > 0) {
-            return handleBonusPromotion(createReqDto, bonusCount);
-        }
-        return createReqDto;
-    }
-
-
-    private OrderCreateReqDto handleBonusPromotion(OrderCreateReqDto createReqDto, int bonusCount) {
-        OutputView.printPromotion(createReqDto.itemName(), bonusCount);
-        Command command = inputView.readCommand();
-        if (command.equals(Command.ACCEPT)) {
-            return orderAdjustmentService.applyBonus(createReqDto, bonusCount);
+            return handleBonusPromotion(createReqDto,bonusCount);
         }
         return createReqDto;
     }
@@ -105,6 +90,15 @@ public class OrderController {
         if (command.equals(Command.ACCEPT)) {
             //todo
             throw new IllegalArgumentException("Exceeded promotion");
+        }
+        return createReqDto;
+    }
+
+    private OrderCreateReqDto handleBonusPromotion(OrderCreateReqDto createReqDto, int bonusCount) {
+        OutputView.printPromotion(createReqDto.itemName(), bonusCount);
+        Command command = inputView.readCommand();
+        if (command.equals(Command.ACCEPT)) {
+            return orderAdjustmentService.applyBonus(createReqDto, bonusCount);
         }
         return createReqDto;
     }

@@ -11,45 +11,91 @@ public class OrderMessageService {
 
     public String showReceipt(List<Order> orders) {
         StringBuilder sb = new StringBuilder();
-
         for (Order order : orders) {
-            sb.append("==============W 편의점================\n");
-            sb.append("상품명\t\t수량\t금액\n");
-
-            // 주문 상품 정보
-            List<OrderProduct> orderProducts = order.getOrderProducts();
-
-            for (OrderProduct orderProduct : orderProducts) {
-                Product product = orderProduct.getProduct();
-                int count = orderProduct.getCount();
-                int price = orderProduct.getOrderPrice() * count;
-
-                sb.append(product.getItem().getName()).append("\t\t")
-                        .append(count).append("\t")
-                        .append(price).append("\n");
-            }
-
-            // 증정 상품 정보
-            Discount discount = order.getDiscount();
-            List<ItemCount> itemCounts = discount.getItemCounts();
-            if (!itemCounts.isEmpty()) {
-                sb.append("=============증\t정===============\n");
-                for (ItemCount itemCount : itemCounts) {
-                    sb.append(itemCount.getItem().getName()).append("\t\t")
-                            .append(itemCount.getCount()).append("\n");
-                }
-            }
-
-            int i = order.getTotalPrice() - discount.getTotalDiscount();
-
-            // 합계 및 할인 정보
-            sb.append("====================================\n");
-            sb.append("총구매액\t\t").append(order.getTotalOrderCount()).append("\t").append(order.getTotalOrderCount()).append("\n");
-            sb.append("행사할인\t\t\t").append(discount.getPromotionDiscount()).append("\n");
-            sb.append("멤버십할인\t\t\t").append(discount.getMembershipDiscount()).append("\n");
-            sb.append("내실돈\t\t\t").append(i).append("\n");
+            printReceiptHeader(sb);
+            printOrderProducts(order, sb);
+            printPromotionProducts(order, sb);
+            printSummary(order, sb);
         }
-
         return sb.toString();
     }
+
+    private void printReceiptHeader(StringBuilder sb) {
+        sb.append("\n==============W 편의점================\n");
+        sb.append(addNamePadding("상품명"))
+                .append(addPadding("수량"))
+                .append(addPadding("금액"))
+                .append("\n");
+    }
+
+    private void printOrderProducts(Order order, StringBuilder sb) {
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            printOrderProduct(orderProduct, sb);
+        }
+    }
+
+    private void printOrderProduct(OrderProduct orderProduct, StringBuilder sb) {
+        Product product = orderProduct.getProduct();
+        int count = orderProduct.getCount();
+        int price = orderProduct.getOrderPrice() * count;
+
+        sb.append(addNamePadding(product.getItem().getName()))
+                .append(formatWithCommas(count))
+                .append(formatWithCommas(price))
+                .append("\n");
+    }
+
+    private void printPromotionProducts(Order order, StringBuilder sb) {
+        Discount discount = order.getDiscount();
+        List<ItemCount> itemCounts = discount.getItemCounts();
+
+        sb.append("=============증\t정===============\n");
+        if (!itemCounts.isEmpty()) {
+            for (ItemCount itemCount : itemCounts) {
+                sb.append(addNamePadding(itemCount.getItem().getName()))
+                        .append(formatWithCommas(itemCount.getCount()))
+                        .append("\n");
+            }
+        }
+    }
+
+    private void printSummary(Order order, StringBuilder sb) {
+        Discount discount = order.getDiscount();
+        int finalAmount = order.getTotalPrice() - discount.getTotalDiscount();
+
+        sb.append("====================================\n");
+        sb.append(addNamePadding("총구매액"))
+                .append(formatWithCommas(order.getTotalOrderCount()))
+                .append(formatWithCommas(order.getTotalPrice()))
+                .append("\n");
+        sb.append(addTotalPadding("행사할인"))
+                .append(formatWithMinus(discount.getPromotionDiscount()))
+                .append("\n");
+        sb.append(addTotalPadding("멤버십할인"))
+                .append(formatWithMinus(discount.getMembershipDiscount()))
+                .append("\n");
+        sb.append(addTotalPadding("내실돈"))
+                .append(formatWithCommas(finalAmount));
+    }
+
+    private String addNamePadding(String input) {
+        return String.format("%-5s\t\t\t", input);
+    }
+
+    private String addPadding(String input) {
+        return String.format("%-5s\t\t", input);
+    }
+
+    private String addTotalPadding(String input) {
+        return String.format("%-5s\t\t\t\t\t\t", input);
+    }
+
+    private String formatWithMinus(int number) {
+        return String.format("%-5s", "-" + String.format("%,-5d", number));
+    }
+
+    private String formatWithCommas(int number) {
+        return String.format("%-5s\t\t", String.format("%,d", number));
+    }
+
 }

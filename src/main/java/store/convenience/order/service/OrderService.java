@@ -28,28 +28,45 @@ public class OrderService {
         this.discountService = discountService;
     }
 
-    public void order(List<OrderCreateReqDto> createReqDtos, boolean hasMembership) {
+    public void process(List<OrderCreateReqDto> createReqDtos, boolean hasMembership) {
         List<OrderProduct> orderProducts = new ArrayList<>();
         for (OrderCreateReqDto createReqDto : createReqDtos) {
             Product product = getProduct(createReqDto.itemName());
             int orderCount = createReqDto.count();
-
-            if (isPromotionActive(product.getPromotion(), createReqDto.currentDate())) {
-                try {
-                    orderProducts.add(OrderProduct.create(product, product.getItem().getPrice(), orderCount));
-                    continue;
-                } catch (NotEnoughStockException e) {
-                    product.removeStock(product.getQuantity());
-                    orderCount -= product.getQuantity();
-                    product = getNoPromotionProduct(createReqDto.itemName());
-                }
+            Result result = processPromotionAndStock(createReqDto, product, orderProducts, orderCount);
+            if (result == null) {
+                continue;
             }
-            orderProducts.add(OrderProduct.create(product, product.getItem().getPrice(), orderCount));
+            orderProducts.add(OrderProduct.create(result.product(), result.product().getItem().getPrice(),
+                    result.orderCount()));
         }
+        processOrderAndSave(createReqDtos, hasMembership, orderProducts);
+    }
 
-        Discount discount = discountService.calculateOrderDiscount(createReqDtos, hasMembership);
-
+    private void processOrderAndSave(List<OrderCreateReqDto> createReqDtos, boolean hasMembership,
+                                     List<OrderProduct> orderProducts) {
+        int totalPrice = calculateOrderAmount(orderProducts);
+        Discount discount = discountService.calculateOrderDiscount(createReqDtos, hasMembership, totalPrice);
         orderRepository.save(Order.create(discount, orderProducts));
+    }
+
+    private Result processPromotionAndStock(OrderCreateReqDto createReqDto, Product product, List<OrderProduct> orderProducts,
+                                            int orderCount) {
+        if (isPromotionActive(product.getPromotion(), createReqDto.currentDate())) {
+            try {
+                orderProducts.add(OrderProduct.create(product, product.getItem().getPrice(), orderCount));
+                return null;
+            } catch (NotEnoughStockException e) {
+                product.removeStock(product.getQuantity());
+                orderCount -= product.getQuantity();
+                product = getNoPromotionProduct(createReqDto.itemName());
+            }
+        }
+        return new Result(product, orderCount);
+    }
+
+    private int calculateOrderAmount(List<OrderProduct> orderProducts) {
+        return orderProducts.stream().mapToInt(OrderProduct::getTotalPrice).sum();
     }
 
     private boolean isPromotionActive(Promotion promotion, LocalDate currentDate) {
@@ -71,6 +88,9 @@ public class OrderService {
 
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
+    }
+
+    private record Result(Product product, int orderCount) {
     }
 
 }

@@ -25,6 +25,11 @@ public class OrderPromotionService {
         return promotion != null && promotion.isActivePromotion(currentDate);
     }
 
+    public int isEligibleForBonus(OrderCreateReqDto createReqDto) {
+        Product product = getProduct(createReqDto.itemName());
+        return product.getPromotion().isBonusApplicable(createReqDto.count());
+    }
+
     public int calculateBonusQuantity(OrderCreateReqDto createReqDto) {
         Product product = getProduct(createReqDto.itemName());
         return product.getPromotion().calculateBonusQuantity(createReqDto.count(), product.getQuantity());
@@ -42,11 +47,6 @@ public class OrderPromotionService {
         int promotions = product.getPromotion().totalPromotions();
         int unitsPerPromotion = product.getQuantity() / promotions;
         return orderCount - unitsPerPromotion * promotions;
-    }
-
-    public int calculateOrderAmounts(OrderCreateReqDto createReqDto) {
-        Product product = getProduct(createReqDto.itemName());
-        return product.getItem().getPrice() * createReqDto.count();
     }
 
     private Product getProduct(String itemName) {

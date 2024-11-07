@@ -87,17 +87,27 @@ class OrderPromotionServiceTest {
     @DisplayName("프로모션 수량에 맞춰 구매를 하면 무료로 받을 수 있는 수량을 알려준다")
     void canReceiveFreeItem() throws Exception {
         // given
-        OrderCreateReqDto createReqDto = createReqDto("콜라", 6, getDate());
+        OrderCreateReqDto createReqDto = createReqDto("오렌지주스", 3, getDate());
 
         // when
         int result = orderPromotionService.calculateBonusQuantity(createReqDto);
 
         // then
-        assertThat(result).isEqualTo(3);
+        assertThat(result).isEqualTo(1);
     }
 
     private static OrderCreateReqDto createReqDto(String itemName, int count, LocalDate date) {
         return new OrderCreateReqDto(itemName, count, date);
+    }
+
+    @Test
+    @DisplayName("프로모션 이벤트 ")
+    void 이름_test() throws Exception {
+        // given
+
+        // when
+
+        // then
     }
 
     private static LocalDate getDate() {

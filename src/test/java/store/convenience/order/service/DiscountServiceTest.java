@@ -47,17 +47,20 @@ class DiscountServiceTest {
     @MethodSource("providedOrderData")
     void OrderDiscount(List<OrderCreateReqDto> orderCreateReqDtos, int expect) throws Exception {
         // when
-        Discount discount = discountService.calculateOrderDiscount(orderCreateReqDtos, true);
+        Discount discount = discountService.calculateOrderDiscount(orderCreateReqDtos, true,50);
 
         // then
-        assertThat(discount.getPromotionDiscount()).isEqualTo(expect);
+        assertAll(() -> {
+            assertThat(discount.getPromotionDiscount()).isEqualTo(expect);
+        });
+
     }
 
     private static Stream<Arguments> providedOrderData(){
         return Stream.of(
                 Arguments.arguments(List.of(createReqDto("오렌지주스", 4, getDate())), 3600),
-                Arguments.arguments(List.of(createReqDto("콜라", 2, getDate())), 1000),
-                Arguments.arguments(List.of(createReqDto("콜라", 4, getDate())), 2000)
+                Arguments.arguments(List.of(createReqDto("콜라", 2, getDate())), 0),
+                Arguments.arguments(List.of(createReqDto("콜라", 4, getDate())), 1000)
         );
     }
 

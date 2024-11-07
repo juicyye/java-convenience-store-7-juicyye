@@ -4,7 +4,6 @@ import java.util.List;
 import store.convenience.product.domain.Item;
 import store.convenience.product.domain.Product;
 import store.convenience.product.domain.ProductInventory;
-import store.global.util.Formatter;
 
 public class ProductMessageFormatter {
 
@@ -50,7 +49,7 @@ public class ProductMessageFormatter {
     private String formatItemLine(Item item) {
         return String.format("- %s %s원 ",
                 item.getName(),
-                Formatter.formatNumber(item.getPrice()));
+                String.format("%,d",item.getPrice()));
     }
 
     private void appendPromotionDetails(StringBuilder sb, Product product) {

@@ -18,13 +18,11 @@ public class DiscountService {
         this.orderPromotionService = orderPromotionService;
     }
 
-    public Discount calculateOrderDiscount(List<OrderCreateReqDto> createReqDtos, boolean hasMembership) {
+    public Discount calculateOrderDiscount(List<OrderCreateReqDto> createReqDtos, boolean hasMembership, int totalPrice) {
         List<ItemCount> items = new ArrayList<>();
-        int totalPrice = 0;
         int promotionAmount = 0;
 
         for (OrderCreateReqDto createReqDto : createReqDtos) {
-            totalPrice += orderPromotionService.calculateOrderAmounts(createReqDto);
             promotionAmount += calculatePromotion(createReqDto, items);
         }
 
@@ -37,7 +35,7 @@ public class DiscountService {
         if (bonusQuantity > 0) {
             items.add(new ItemCount(Item.of(createReqDto.itemName()), bonusQuantity));
         }
-        return bonusQuantity;
+        return bonusQuantity * Item.of(createReqDto.itemName()).getPrice();
     }
 
     public int calculateMembershipDiscount(int priceAfterPromotion, boolean hasMembership) {
