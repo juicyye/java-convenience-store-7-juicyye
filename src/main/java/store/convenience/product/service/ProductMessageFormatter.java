@@ -1,4 +1,4 @@
-package store.convenience.product.controller;
+package store.convenience.product.service;
 
 import java.util.List;
 import store.convenience.product.domain.Item;

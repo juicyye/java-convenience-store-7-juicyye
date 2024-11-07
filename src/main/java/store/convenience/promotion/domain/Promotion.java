@@ -26,11 +26,27 @@ public class Promotion {
         return !valueDate.isBefore(startDate) && !valueDate.isAfter(endDate);
     }
 
-    public boolean bonus(int count) {
-        if (details.purchaseQuantity() == count) {
-            return true;
+    public int calculateBonusQuantity(int orderCount,int quantity) {
+        int purchaseQuantity = details.purchaseQuantity();
+        int bonusQuantity = details.bonusQuantity();
+        int availableCount = Math.min(orderCount, quantity);
+
+        if (isSinglePurchaseWithOddOrder(availableCount, purchaseQuantity)) {
+            return bonusQuantity;
         }
-        return false;
+
+        if (isEligibleForPromotion(availableCount, purchaseQuantity)) {
+            return bonusQuantity;
+        }
+        return 0;
+    }
+
+    private boolean isSinglePurchaseWithOddOrder(int orderCount, int purchaseQuantity) {
+        return purchaseQuantity == 1 && orderCount % 2 == 1;
+    }
+
+    private boolean isEligibleForPromotion(int orderCount, int purchaseQuantity) {
+        return (orderCount - purchaseQuantity) % totalPromotions() == 0;
     }
 
     public int totalPromotions() {

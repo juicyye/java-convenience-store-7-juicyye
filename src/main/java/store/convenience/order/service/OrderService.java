@@ -19,14 +19,13 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
-    private final OrderPromotionService orderPromotionService;
+    private final DiscountService discountService;
 
     public OrderService(OrderRepository orderRepository,
-                        ProductRepository productRepository,
-                        OrderPromotionService orderPromotionService) {
+                        ProductRepository productRepository, DiscountService discountService) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
-        this.orderPromotionService = orderPromotionService;
+        this.discountService = discountService;
     }
 
     public void order(List<OrderCreateReqDto> createReqDtos, boolean hasMembership) {
@@ -37,18 +36,18 @@ public class OrderService {
 
             if (isPromotionActive(product.getPromotion(), createReqDto.currentDate())) {
                 try {
-                    orderProducts.add(createOrderProduct(product, product.getItem().getPrice(), orderCount));
+                    orderProducts.add(OrderProduct.create(product, product.getItem().getPrice(), orderCount));
                     continue;
                 } catch (NotEnoughStockException e) {
                     product.removeStock(product.getQuantity());
                     orderCount -= product.getQuantity();
-                    product = getProduct(createReqDto.itemName());
+                    product = getNoPromotionProduct(createReqDto.itemName());
                 }
             }
-            orderProducts.add(createOrderProduct(product, product.getItem().getPrice(), orderCount));
+            orderProducts.add(OrderProduct.create(product, product.getItem().getPrice(), orderCount));
         }
 
-        Discount discount = orderPromotionService.calculateOrderDiscount(createReqDtos, hasMembership);
+        Discount discount = discountService.calculateOrderDiscount(createReqDtos, hasMembership);
 
         orderRepository.save(Order.create(discount, orderProducts));
     }
@@ -57,16 +56,21 @@ public class OrderService {
         return promotion != null && promotion.isActivePromotion(currentDate);
     }
 
-    private OrderProduct createOrderProduct(Product product, int price, int orderCount) {
-        return OrderProduct.create(product,
-                price,
-                orderCount);
+    private Product getNoPromotionProduct(String itemName) {
+        return productRepository.findByNameAndNoPromotion(itemName)
+                .orElseThrow(() -> new NotFoundException(
+                        ErrorMessage.NOT_FOUND_PRODUCT.getMessage()
+                ));
     }
 
     private Product getProduct(String itemName) {
         return productRepository.findByName(itemName)
                 .orElseThrow(() -> new NotFoundException(
                         ErrorMessage.NOT_FOUND_PRODUCT.getMessage()));
+    }
+
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
     }
 
 }

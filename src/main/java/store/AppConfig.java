@@ -2,17 +2,21 @@ package store;
 
 import store.convenience.order.controller.OrderController;
 import store.convenience.order.controller.input.InputHandler;
+import store.convenience.order.controller.input.InputProcessor;
 import store.convenience.order.controller.input.InputView;
 import store.convenience.order.infrastructure.OrderRepositoryImpl;
 import store.convenience.order.infrastructure.StoreDateTimeHolder;
-import store.convenience.order.service.CheckService;
+import store.convenience.order.service.DiscountService;
+import store.convenience.order.service.OrderMessageService;
 import store.convenience.order.service.OrderPromotionService;
+import store.convenience.order.service.OrderAdjustmentService;
 import store.convenience.order.service.OrderService;
 import store.convenience.order.service.port.DateTimeHolder;
 import store.convenience.order.service.port.OrderRepository;
 import store.convenience.product.controller.ProductController;
-import store.convenience.product.controller.ProductMessageFormatter;
+import store.convenience.product.service.ProductMessageFormatter;
 import store.convenience.product.infrastructure.ProductRepositoryImpl;
+import store.convenience.product.service.ProductMessageService;
 import store.convenience.product.service.ProductService;
 import store.convenience.product.service.port.ProductRepository;
 import store.convenience.promotion.controller.PromotionController;
@@ -35,7 +39,9 @@ public class AppConfig {
     }
 
     public OrderController orderController() {
-        return new OrderController(orderService(), inputView(), checkService(), orderPromotionService());
+        return new OrderController(orderService(), inputView(), checkService(),
+                orderAdjustmentService(),inputProcessor(), productMessageService(),
+                orderMessageService());
     }
 
     /**
@@ -51,15 +57,27 @@ public class AppConfig {
     }
 
     private OrderService orderService() {
-        return new OrderService(orderRepository(), productRepository(), orderPromotionService());
+        return new OrderService(orderRepository(), productRepository(), discountService());
     }
 
-    private CheckService checkService() {
-        return new CheckService(productRepository());
-    }
-
-    private OrderPromotionService orderPromotionService() {
+    private OrderPromotionService checkService() {
         return new OrderPromotionService(productRepository());
+    }
+
+    private OrderAdjustmentService orderAdjustmentService() {
+        return new OrderAdjustmentService();
+    }
+
+    private ProductMessageService productMessageService(){
+        return new ProductMessageService(productMessageFormatter(), productService());
+    }
+
+    private DiscountService discountService(){
+        return new DiscountService(checkService());
+    }
+
+    private OrderMessageService orderMessageService(){
+        return new OrderMessageService();
     }
 
     /**
@@ -96,6 +114,10 @@ public class AppConfig {
 
     private InputView inputView() {
         return new InputView(inputHandler());
+    }
+
+    private InputProcessor inputProcessor(){
+        return new InputProcessor();
     }
 
 }

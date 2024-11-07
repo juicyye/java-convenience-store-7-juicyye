@@ -10,4 +10,13 @@ public class ItemCount {
         this.item = item;
         this.count = count;
     }
+
+    public Item getItem() {
+        return item;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
 }

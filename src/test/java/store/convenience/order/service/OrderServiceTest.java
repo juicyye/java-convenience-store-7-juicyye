@@ -5,14 +5,10 @@ import static org.assertj.core.groups.Tuple.tuple;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import store.convenience.order.controller.req.OrderCreateReqDto;
 import store.convenience.order.domain.Discount;
 import store.convenience.order.domain.Order;
@@ -31,7 +27,8 @@ class OrderServiceTest {
     private OrderRepository orderRepository = OrderRepositoryImpl.getInstance();
     private ProductRepository productRepository = ProductRepositoryImpl.getInstance();
     private OrderPromotionService orderPromotionService = new OrderPromotionService(productRepository);
-    private OrderService orderService = new OrderService(orderRepository, productRepository, orderPromotionService);
+    private final DiscountService discountService = new DiscountService(orderPromotionService);
+    private OrderService orderService = new OrderService(orderRepository, productRepository,discountService);
 
     @BeforeEach
     void setUp() {
@@ -84,9 +81,9 @@ class OrderServiceTest {
         // then
         assertThat(results)
                 .extracting(Order::getDiscount)
-                .extracting(Discount::getPromotionDiscount, Discount::getMembershipDiscount)
+                .extracting(Discount::getPromotionDiscount, Discount::getMembershipDiscount, Discount::getTotalDiscount)
                 .containsExactlyInAnyOrder(
-                        tuple(3600, (int) Math.floor(3600 * 0.3) / 100 * 100)
+                        tuple(3600, (int) Math.floor(3600 * 0.3) / 100 * 100,4600)
                 );
     }
 

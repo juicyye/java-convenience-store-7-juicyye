@@ -2,49 +2,87 @@ package store.convenience.order.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import store.convenience.order.controller.input.InputProcessor;
 import store.convenience.order.controller.input.InputView;
 import store.convenience.order.controller.req.OrderCreateReqDto;
-import store.convenience.order.service.CheckService;
+import store.convenience.order.domain.Order;
+import store.convenience.order.service.OrderAdjustmentService;
+import store.convenience.order.service.OrderMessageService;
 import store.convenience.order.service.OrderPromotionService;
 import store.convenience.order.service.OrderService;
+import store.convenience.product.service.ProductMessageService;
 import store.global.util.OutputView;
 
 public class OrderController {
 
     private final OrderService orderService;
     private final InputView inputView;
-    private final CheckService checkService;
     private final OrderPromotionService orderPromotionService;
+    private final OrderAdjustmentService orderAdjustmentService;
+    private final InputProcessor inputProcessor;
+    private final ProductMessageService productMessageService;
+    private final OrderMessageService orderMessageService;
 
-    public OrderController(OrderService orderService, InputView inputView, CheckService checkService,
-                           OrderPromotionService orderPromotionService) {
+    public OrderController(OrderService orderService, InputView inputView, OrderPromotionService orderPromotionService,
+                           OrderAdjustmentService orderAdjustmentService, InputProcessor inputProcessor,
+                           ProductMessageService productMessageService, OrderMessageService orderMessageService) {
         this.orderService = orderService;
         this.inputView = inputView;
-        this.checkService = checkService;
         this.orderPromotionService = orderPromotionService;
+        this.orderAdjustmentService = orderAdjustmentService;
+        this.inputProcessor = inputProcessor;
+        this.productMessageService = productMessageService;
+        this.orderMessageService = orderMessageService;
     }
 
     public void start() {
-        List<OrderCreateReqDto> createReqDtos = inputView.readItems();
-        List<OrderCreateReqDto> updatedCreateReqDtos = new ArrayList<>();
-        for (OrderCreateReqDto createReqDto : createReqDtos) {
-            if (checkService.checkPromotion(createReqDto)) {
-                createReqDto = handlerPromotions(createReqDto);
-            }
-            updatedCreateReqDtos.add(createReqDto);
-        }
+        do {
+            inputProcessor.execute(() -> {
+                showProductInventory();
+                List<OrderCreateReqDto> createReqDtos = purchaseOrderItem();
+                List<OrderCreateReqDto> updatedCreateReqDtos = new ArrayList<>();
+                extracted(createReqDtos, updatedCreateReqDtos);
 
-        boolean memberShip = hasMemberShip();
-        orderService.order(updatedCreateReqDtos, memberShip);
+                orderService.order(updatedCreateReqDtos, hasMemberShip());
+                List<Order> orders = orderService.getAllOrders();
+                printReceipt(orders);
+                return null;
+            });
+
+        } while (processRepurchase());
+
+    }
+
+    private void showProductInventory() {
+        OutputView.printGreeting();
+        String message = productMessageService.showProductInventory();
+        OutputView.printInventoryHeader();
+        OutputView.printInventory(message);
+    }
+
+    private List<OrderCreateReqDto> purchaseOrderItem() {
+        return inputProcessor.execute(inputView::readItems);
+    }
+
+    private void extracted(List<OrderCreateReqDto> createReqDtos, List<OrderCreateReqDto> updatedCreateReqDtos) {
+        inputProcessor.execute(() -> {
+            for (OrderCreateReqDto createReqDto : createReqDtos) {
+                if (orderPromotionService.checkPromotion(createReqDto)) {
+                    createReqDto = handlerPromotions(createReqDto);
+                }
+                updatedCreateReqDtos.add(createReqDto);
+            }
+            return null;
+        });
     }
 
     private OrderCreateReqDto handlerPromotions(OrderCreateReqDto createReqDto) {
-        int exceededCount = checkService.calculateExcessQuantity(createReqDto);
+        int exceededCount = orderPromotionService.calculateExcessQuantity(createReqDto);
         if (exceededCount > 0) {
             return handleExceededPromotion(createReqDto, exceededCount);
         }
 
-        int bonusCount = checkService.calculateBonusQuantity(createReqDto);
+        int bonusCount = orderPromotionService.calculateBonusQuantity(createReqDto);
         if (bonusCount > 0) {
             return handleBonusPromotion(createReqDto, bonusCount);
         }
@@ -56,7 +94,7 @@ public class OrderController {
         OutputView.printPromotion(createReqDto.itemName(), bonusCount);
         Command command = inputView.readCommand();
         if (command.equals(Command.ACCEPT)) {
-            return orderPromotionService.applyBonus(createReqDto, bonusCount);
+            return orderAdjustmentService.applyBonus(createReqDto, bonusCount);
         }
         return createReqDto;
     }
@@ -71,13 +109,19 @@ public class OrderController {
         return createReqDto;
     }
 
+    private void printReceipt(List<Order> orders) {
+        String message = orderMessageService.showReceipt(orders);
+        OutputView.printReceipt(message);
+    }
+
     private boolean hasMemberShip() {
         OutputView.printMembership();
-        Command command = inputView.readCommand();
-        if (command.equals(Command.ACCEPT)) {
-            return true;
-        }
-        return false;
+        return inputView.readCommand().equals(Command.ACCEPT);
+    }
+
+    private boolean processRepurchase() {
+        OutputView.printRepurchase();
+        return inputView.readCommand().equals(Command.ACCEPT);
     }
 
 }

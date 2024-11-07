@@ -24,9 +24,15 @@ public class Order {
         orderProducts.add(orderProduct);
     }
 
+    public int getTotalOrderCount(){
+        return orderProducts.stream()
+                .mapToInt(OrderProduct::getCount)
+                .sum();
+    }
+
     public int getTotalPrice(){
         return orderProducts.stream()
-                .mapToInt(OrderProduct::getOrderPrice)
+                .mapToInt(OrderProduct::getTotalPrice)
                 .sum();
     }
 

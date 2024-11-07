@@ -15,6 +15,10 @@ public class Discount {
         this.membershipDiscount = membershipDiscount;
     }
 
+    public int getTotalDiscount() {
+        return promotionDiscount + membershipDiscount;
+    }
+
     public List<ItemCount> getItemCounts() {
         return itemCounts;
     }
