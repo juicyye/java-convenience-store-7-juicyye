@@ -3,7 +3,6 @@ package store.convenience.order.domain;
 import store.convenience.product.domain.Item;
 
 public class ItemCount {
-
     private Item item;
     private int count;
 

@@ -12,12 +12,12 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     private final Map<String, List<Product>> products = new HashMap<>();
 
-    private static final ProductRepositoryImpl instance = new ProductRepositoryImpl();
+    private static final ProductRepository instance = new ProductRepositoryImpl();
 
     private ProductRepositoryImpl() {
     }
 
-    public static ProductRepositoryImpl getInstance() {
+    public static ProductRepository getInstance() {
         return instance;
     }
 
@@ -35,11 +35,13 @@ public class ProductRepositoryImpl implements ProductRepository {
         return products.values().stream().toList();
     }
 
-    @Override
-    public Optional<Product> findByNameAndPromotion(String productName) {
+    public Optional<Product> findByName(String productName) {
         return products.get(productName).stream()
                 .filter(i -> i.getPromotion() != null)
-                .findFirst();
+                .findFirst()
+                .or(() -> products.get(productName).stream()
+                        .filter(i -> i.getPromotion() == null)
+                        .findFirst());
     }
 
     @Override

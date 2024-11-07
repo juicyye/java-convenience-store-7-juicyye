@@ -8,11 +8,18 @@ import java.util.List;
 import java.util.regex.Pattern;
 import store.convenience.order.controller.Command;
 import store.convenience.order.controller.req.OrderCreateReqDto;
+import store.convenience.order.service.port.DateTimeHolder;
 import store.global.util.ErrorMessage;
 import store.global.util.Parser;
 import store.global.util.StoreConstant;
 
 public class InputHandler {
+
+    private final DateTimeHolder dateTimeHolder;
+
+    public InputHandler(DateTimeHolder dateTimeHolder) {
+        this.dateTimeHolder = dateTimeHolder;
+    }
 
     public List<OrderCreateReqDto> parseOrderRequests(String input) {
         List<OrderCreateReqDto> createReqDtos = new ArrayList<>();
@@ -33,7 +40,7 @@ public class InputHandler {
     private void createOrderDto(List<OrderCreateReqDto> createReqDtos, String[] orderParts) {
         String name = orderParts[NAME_INDEX];
         String count = orderParts[COUNT_INDEX];
-        OrderCreateReqDto createReqDto = new OrderCreateReqDto(name, Parser.convertToInt(count));
+        OrderCreateReqDto createReqDto = new OrderCreateReqDto(name, Parser.convertToInt(count), dateTimeHolder.now().toLocalDate());
         createReqDtos.add(createReqDto);
     }
 

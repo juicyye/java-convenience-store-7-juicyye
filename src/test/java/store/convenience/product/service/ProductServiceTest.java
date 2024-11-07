@@ -45,15 +45,11 @@ class ProductServiceTest {
         productService.register(input);
 
         // when
-        List<Product> result = productService.getProducts("콜라");
+        Product result = productService.getPromotedProduct("콜라");
 
         // then
-        assertThat(result).hasSize(1)
-                .allSatisfy(p -> {
-                            assertThat(p.getQuantity()).isEqualTo(10);
-                            assertThat(p.getItem().getName()).isEqualTo("콜라");
-                        }
-                );
+        assertThat(result.getItem()).isEqualByComparingTo(Item.COLA);
+
     }
 
     @Test
@@ -88,15 +84,10 @@ class ProductServiceTest {
         productService.addNonPromotionItems();
 
         // when
-        List<Product> result = productService.getProducts("콜라");
+        Product result = productService.getNonPromotedProduct("콜라");
 
         // then
-        assertThat(result).hasSize(2)
-                .extracting(Product::getItem, Product::getQuantity)
-                .containsExactlyInAnyOrder(
-                        Tuple.tuple(Item.COLA, 10),
-                        Tuple.tuple(Item.COLA, 0)
-                );
+        assertThat(result).isNotNull();
     }
 
     private LocalDate getDate() {

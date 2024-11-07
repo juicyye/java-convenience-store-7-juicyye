@@ -4,8 +4,4 @@ public record PromotionDetails(
         String name,
         int purchaseQuantity,
         int bonusQuantity
-) {
-    public int totalPromotions() {
-        return bonusQuantity() + purchaseQuantity();
-    }
-}
+) {}

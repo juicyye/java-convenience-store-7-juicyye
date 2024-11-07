@@ -35,7 +35,7 @@ public class AppConfig {
     }
 
     public OrderController orderController() {
-        return new OrderController(orderService(), inputView(), checkService(),orderPromotionService());
+        return new OrderController(orderService(), inputView(), checkService(), orderPromotionService());
     }
 
     /**
@@ -51,15 +51,15 @@ public class AppConfig {
     }
 
     private OrderService orderService() {
-        return new OrderService(orderRepository(), productRepository());
+        return new OrderService(orderRepository(), productRepository(), orderPromotionService());
     }
 
-    private CheckService checkService(){
-        return new CheckService(productRepository(), dateTimeHolder());
+    private CheckService checkService() {
+        return new CheckService(productRepository());
     }
 
-    private OrderPromotionService orderPromotionService(){
-        return new OrderPromotionService();
+    private OrderPromotionService orderPromotionService() {
+        return new OrderPromotionService(productRepository());
     }
 
     /**
@@ -83,18 +83,18 @@ public class AppConfig {
      */
 
     private ProductMessageFormatter productMessageFormatter() {
-        return new ProductMessageFormatter();
+        return ProductMessageFormatter.getInstance();
     }
 
-    private DateTimeHolder dateTimeHolder(){
-        return new StoreDateTimeHolder();
+    private DateTimeHolder dateTimeHolder() {
+        return StoreDateTimeHolder.getInstance();
     }
 
-    private InputHandler inputHandler(){
-        return new InputHandler();
+    private InputHandler inputHandler() {
+        return new InputHandler(dateTimeHolder());
     }
 
-    private InputView inputView(){
+    private InputView inputView() {
         return new InputView(inputHandler());
     }
 

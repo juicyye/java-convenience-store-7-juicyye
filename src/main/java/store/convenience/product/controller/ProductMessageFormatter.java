@@ -8,6 +8,15 @@ import store.global.util.Formatter;
 
 public class ProductMessageFormatter {
 
+    private static final ProductMessageFormatter instance = new ProductMessageFormatter();
+
+    public static ProductMessageFormatter getInstance() {
+        return instance;
+    }
+
+    private ProductMessageFormatter() {
+    }
+
     public String formatInventory(List<ProductInventory> inventories) {
         StringBuilder sb = new StringBuilder();
         for (ProductInventory inventory : inventories) {
@@ -35,7 +44,7 @@ public class ProductMessageFormatter {
         if (quantity == 0) {
             return "재고 없음 ";
         }
-        return String.format("%s개 ",quantity);
+        return String.format("%s개 ", quantity);
     }
 
     private String formatItemLine(Item item) {

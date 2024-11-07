@@ -7,15 +7,15 @@ import store.convenience.order.service.port.OrderRepository;
 
 public class OrderRepositoryImpl implements OrderRepository {
 
-    private static final OrderRepositoryImpl instance = new OrderRepositoryImpl();
+    private final List<Order> orders = new ArrayList<>();
+
+    private static final OrderRepository instance = new OrderRepositoryImpl();
 
     private OrderRepositoryImpl() {}
 
     public static OrderRepository getInstance() {
         return instance;
     }
-
-    private final List<Order> orders = new ArrayList<>();
 
     @Override
     public void save(Order order) {
@@ -26,4 +26,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     public List<Order> findAll() {
         return orders;
     }
+
+    @Override
+    public void clear() {
+        orders.clear();
+    }
+
 }

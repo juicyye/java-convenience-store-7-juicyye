@@ -10,7 +10,7 @@ public class PromotionRepositoryImpl implements PromotionRepository {
 
     private final List<Promotion> promotions = new ArrayList<>();
 
-    private static final PromotionRepositoryImpl instance = new PromotionRepositoryImpl();
+    private static final PromotionRepository instance = new PromotionRepositoryImpl();
 
     public static PromotionRepository getInstance() {
         return instance;

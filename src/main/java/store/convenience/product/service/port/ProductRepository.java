@@ -10,7 +10,7 @@ public interface ProductRepository {
 
     List<List<Product>> findAll();
 
-    Optional<Product> findByNameAndPromotion(String productName);
+    Optional<Product> findByName(String productName);
 
     Optional<Product> findByNameAndNoPromotion(String productName);
 

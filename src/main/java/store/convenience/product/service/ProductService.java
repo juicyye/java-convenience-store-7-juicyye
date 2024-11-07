@@ -10,6 +10,8 @@ import store.convenience.product.domain.ProductInventory;
 import store.convenience.product.service.port.ProductRepository;
 import store.convenience.promotion.domain.Promotion;
 import store.convenience.promotion.service.port.PromotionRepository;
+import store.global.exception.NotFoundException;
+import store.global.util.ErrorMessage;
 import store.global.util.Parser;
 
 public class ProductService {
@@ -36,8 +38,14 @@ public class ProductService {
                 .orElse(null);
     }
 
-    public List<Product> getProducts(String itemName) {
-        return productRepository.findByNameAndPromotion(itemName);
+    public Product getNonPromotedProduct(String itemName) {
+        return productRepository.findByName(itemName)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_FOUND_PRODUCT.getMessage()));
+    }
+
+    public Product getPromotedProduct(String itemName) {
+        return productRepository.findByNameAndNoPromotion(itemName)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_FOUND_PRODUCT.getMessage()));
     }
 
     public List<ProductInventory> findAll() {

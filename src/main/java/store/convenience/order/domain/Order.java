@@ -30,4 +30,11 @@ public class Order {
                 .sum();
     }
 
+    public List<OrderProduct> getOrderProducts() {
+        return orderProducts;
+    }
+
+    public Discount getDiscount() {
+        return discount;
+    }
 }

@@ -1,10 +1,9 @@
 package store.convenience.order.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import store.convenience.order.controller.input.InputView;
 import store.convenience.order.controller.req.OrderCreateReqDto;
-import store.convenience.order.domain.Discount;
-import store.convenience.order.domain.PromotionCheck;
 import store.convenience.order.service.CheckService;
 import store.convenience.order.service.OrderPromotionService;
 import store.convenience.order.service.OrderService;
@@ -25,18 +24,51 @@ public class OrderController {
         this.orderPromotionService = orderPromotionService;
     }
 
-    public void start(){
+    public void start() {
         List<OrderCreateReqDto> createReqDtos = inputView.readItems();
-        List<PromotionCheck> promotionChecks = checkService.checkPromotion(createReqDtos);
-        if(!promotionChecks.isEmpty()){
-            handlerPromotions(promotionChecks);
+        List<OrderCreateReqDto> updatedCreateReqDtos = new ArrayList<>();
+        for (OrderCreateReqDto createReqDto : createReqDtos) {
+            if (checkService.checkPromotion(createReqDto)) {
+                createReqDto = handlerPromotions(createReqDto);
+            }
+            updatedCreateReqDtos.add(createReqDto);
         }
 
         boolean memberShip = hasMemberShip();
-        Discount discount = orderPromotionService.calculateOrderDiscount(promotionChecks, memberShip);
+        orderService.order(updatedCreateReqDtos, memberShip);
+    }
 
-        orderService.order(promotionChecks, discount);
+    private OrderCreateReqDto handlerPromotions(OrderCreateReqDto createReqDto) {
+        int exceededCount = checkService.calculateExcessQuantity(createReqDto);
+        if (exceededCount > 0) {
+            return handleExceededPromotion(createReqDto, exceededCount);
+        }
 
+        int bonusCount = checkService.calculateBonusQuantity(createReqDto);
+        if (bonusCount > 0) {
+            return handleBonusPromotion(createReqDto, bonusCount);
+        }
+        return createReqDto;
+    }
+
+
+    private OrderCreateReqDto handleBonusPromotion(OrderCreateReqDto createReqDto, int bonusCount) {
+        OutputView.printPromotion(createReqDto.itemName(), bonusCount);
+        Command command = inputView.readCommand();
+        if (command.equals(Command.ACCEPT)) {
+            return orderPromotionService.applyBonus(createReqDto, bonusCount);
+        }
+        return createReqDto;
+    }
+
+    private OrderCreateReqDto handleExceededPromotion(OrderCreateReqDto createReqDto, int promotionCount) {
+        OutputView.printOverPromotionPurchase(createReqDto.itemName(), promotionCount);
+        Command command = inputView.readCommand();
+        if (command.equals(Command.ACCEPT)) {
+            //todo
+            throw new IllegalArgumentException("Exceeded promotion");
+        }
+        return createReqDto;
     }
 
     private boolean hasMemberShip() {
@@ -46,35 +78,6 @@ public class OrderController {
             return true;
         }
         return false;
-    }
-
-    private void handlerPromotions(List<PromotionCheck> checkResults) {
-        for (PromotionCheck promotionCheck : checkResults) {
-            String itemName = promotionCheck.getProduct().getItem().getName();
-            int promotionCount = promotionCheck.getBonusItemCount();
-            if (promotionCheck.isBonusAvailable()) {
-                handleBonusPromotion(promotionCheck, itemName, promotionCount);
-            }
-            if (promotionCheck.isExceeded()) {
-                handleExceededPromotion(promotionCheck, itemName, promotionCount);
-            }
-        }
-    }
-
-    private void handleBonusPromotion(PromotionCheck promotionCheck, String itemName, int promotionCount) {
-        OutputView.printPromotion(itemName, promotionCount);
-        Command command = inputView.readCommand();
-        if (command.equals(Command.ACCEPT)) {
-            orderPromotionService.bonus(promotionCheck);
-        }
-    }
-
-    private void handleExceededPromotion(PromotionCheck promotionCheck, String itemName, int promotionCount) {
-        OutputView.printOverPromotionPurchase(itemName, promotionCount);
-        Command command = inputView.readCommand();
-        if (command.equals(Command.ACCEPT)) {
-            orderPromotionService.exceed(promotionCheck);
-        }
     }
 
 }

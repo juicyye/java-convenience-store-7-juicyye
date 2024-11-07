@@ -5,13 +5,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.assertj.core.groups.Tuple;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import store.convenience.order.controller.req.OrderCreateReqDto;
-import store.convenience.order.domain.PromotionCheck;
 import store.convenience.product.domain.Item;
 import store.convenience.product.domain.Product;
 import store.convenience.product.infrastructure.ProductRepositoryImpl;
@@ -28,7 +30,7 @@ class CheckServiceTest {
     private final PromotionRepository promotionRepository = PromotionRepositoryImpl.getInstance();
     private final FakeDateTimeHolder fakeDateTimeHolder = new FakeDateTimeHolder(
             LocalDateTime.of(2024, 5, 5, 12, 38, 45));
-    private final CheckService checkService = new CheckService(productRepository, fakeDateTimeHolder);
+    private final CheckService checkService = new CheckService(productRepository);
 
     @BeforeEach
     void setUp() {
@@ -38,8 +40,10 @@ class CheckServiceTest {
         promotionRepository.save(promotion2);
         Product product = new Product(Item.COLA, 7, promotion);
         Product product2 = new Product(Item.ORANGE_JUICE, 9, promotion2);
+        Product product3 = new Product(Item.CIDER, 9, null);
         productRepository.save(product);
         productRepository.save(product2);
+        productRepository.save(product3);
     }
 
     @AfterEach
@@ -48,39 +52,56 @@ class CheckServiceTest {
         promotionRepository.clear();
     }
 
+    @ParameterizedTest
+    @DisplayName("주문 상품이 프로모션 상품인지 프로모션 기한내에 있는지 확인한다")
+    @MethodSource("providedOrderProduct")
+    void orderPromotion(OrderCreateReqDto createReqDto, boolean expect) throws Exception {
+        // when
+        boolean result = checkService.checkPromotion(createReqDto);
+
+        // then
+        assertThat(result).isEqualTo(expect);
+    }
+
+    private static Stream<Arguments> providedOrderProduct() {
+        return Stream.of(
+                Arguments.arguments(createReqDto("콜라", 3, getDate()), true),
+                Arguments.arguments(createReqDto("사이다", 3, getDate()), false),
+                Arguments.arguments(createReqDto("콜라", 3, LocalDate.of(2024, 5, 6)), false)
+        );
+    }
+
     @Test
     @DisplayName("프로모션 이벤트 기간에 프로모션 수량을 넘어서 구매를 할 때 프로모션 할인 적용이 안되는 수량을 알려준다")
     void overPromotionCount() throws Exception {
         // given
-        OrderCreateReqDto createReqDto = new OrderCreateReqDto("콜라", 10);
+        OrderCreateReqDto createReqDto = createReqDto("콜라", 10, getDate());
 
         // when
-        List<PromotionCheck> result = checkService.checkPromotion(List.of(createReqDto));
+        int result = checkService.calculateExcessQuantity(createReqDto);
 
         // then
-        assertThat(result).hasSize(1)
-                .extracting(PromotionCheck::getCount, PromotionCheck::isExceeded, PromotionCheck::getBonusItemCount)
-                .containsExactlyInAnyOrder(
-                        Tuple.tuple(10, true, 4)
-                );
+        assertThat(result).isEqualTo(4);
     }
 
     @Test
     @DisplayName("프로모션 수량에 맞춰 구매를 하면 무료로 받을 수 있는 수량을 알려준다")
     void canReceiveFreeItem() throws Exception {
         // given
-        OrderCreateReqDto createReqDto = new OrderCreateReqDto("오렌지주스", 1);
+        OrderCreateReqDto createReqDto = createReqDto("오렌지주스", 1, getDate());
 
         // when
-        List<PromotionCheck> result = checkService.checkPromotion(List.of(createReqDto));
+        int result = checkService.calculateBonusQuantity(createReqDto);
 
         // then
-        assertThat(result).hasSize(1)
-                .extracting(PromotionCheck::isBonusAvailable, PromotionCheck::getBonusItemCount)
-                .containsExactlyInAnyOrder(Tuple.tuple(true, 1));
+        assertThat(result).isEqualTo(1);
     }
 
-    private LocalDate getDate() {
+    private static OrderCreateReqDto createReqDto(String itemName, int count, LocalDate date) {
+        return new OrderCreateReqDto(itemName, count, date);
+    }
+
+    private static LocalDate getDate() {
         return LocalDate.of(2024, 5, 5);
     }
 
