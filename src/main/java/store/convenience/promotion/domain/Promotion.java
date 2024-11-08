@@ -26,20 +26,20 @@ public class Promotion {
         return !checkDate.isBefore(startDate) && !checkDate.isAfter(endDate);
     }
 
-    public int calculateRemaining(int orderCount) {
+    public int checkFreeItemAvailability(int orderCount) {
         int nearestMultiple = getNearestMultiple(orderCount);
         int bonusQuantity = getDetails().bonusQuantity();
         int difference = nearestMultiple - orderCount;
 
-        if (difference > 0 && difference <= bonusQuantity) {
-            return difference;
+        if (difference == bonusQuantity) {
+            return bonusQuantity;
         }
         return 0;
     }
 
     private int getNearestMultiple(int orderCount) {
         int total = totalPromotions();
-        return ((orderCount + total-1) / total) * total;
+        return ((orderCount + total - 1) / total) * total;
     }
 
     public int calculateBonus(int availableCount) {

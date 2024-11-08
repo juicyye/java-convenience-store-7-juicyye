@@ -19,19 +19,14 @@ public class OrderPromotionService {
         return product.canApplyPromotion(createReqDto.currentDate());
     }
 
-    public int isEligibleForBonus(OrderCreateReqDto createReqDto) {
+    public int getEligibleBonusItemCount(OrderCreateReqDto createReqDto) {
         Product product = getProduct(createReqDto.itemName());
-        return product.remainingForBonus(createReqDto.count(), createReqDto.currentDate());
+        return product.checkFreeItemCount(createReqDto.count(), createReqDto.currentDate());
     }
 
     public int determineBonusQuantity(OrderCreateReqDto createReqDto) {
         Product product = getProduct(createReqDto.itemName());
         return product.calculateBonusQuantity(createReqDto.count(), createReqDto.currentDate());
-    }
-
-    public int getBonusQuantity(OrderCreateReqDto createReqDto) {
-        Product product = getProduct(createReqDto.itemName());
-        return product.getBonusQuantity(createReqDto.currentDate());
     }
 
     public int determineExcessQuantity(OrderCreateReqDto createReqDto) {

@@ -74,40 +74,43 @@ class OrderPromotionServiceTest {
     @DisplayName("프로모션 이벤트 기간에 프로모션 수량을 넘어서 구매를 할 때 프로모션 할인 적용이 안되는 수량을 알려준다")
     void overPromotionCount() throws Exception {
         // given
-        OrderCreateReqDto createReqDto = createReqDto("콜라", 10, getDate());
+        OrderCreateReqDto createReqDto = createReqDto("콜라", 5, getDate());
 
         // when
         int result = orderPromotionService.determineExcessQuantity(createReqDto);
 
         // then
-        assertThat(result).isEqualTo(4);
+        assertThat(result).isEqualTo(1);
     }
 
     @Test
-    @DisplayName("프로모션 수량에 맞춰 구매를 하면 무료로 받을 수 있는 수량을 알려준다")
-    void canReceiveFreeItem() throws Exception {
+    @DisplayName("프로모션 기간과 프로모션 구매 조건에 맞으면 무료 증정 아이템 수량을 알려준다")
+    void getEligibleBonusItemCount() throws Exception {
         // given
-        OrderCreateReqDto createReqDto = createReqDto("오렌지주스", 3, getDate());
+        OrderCreateReqDto createReqDto = createReqDto("콜라", 5, getDate());
 
         // when
-        int result = orderPromotionService.getBonusQuantity(createReqDto);
+        int result = orderPromotionService.getEligibleBonusItemCount(createReqDto);
 
         // then
         assertThat(result).isEqualTo(1);
     }
 
-    private static OrderCreateReqDto createReqDto(String itemName, int count, LocalDate date) {
-        return new OrderCreateReqDto(itemName, count, date);
-    }
-
     @Test
-    @DisplayName("프로모션 이벤트 ")
-    void 이름_calculateRemaining() throws Exception {
+    @DisplayName("프로모션 기간과 구매 수량에 따른 무료 증정 아이템 수량을 알려준다")
+    void determineBonusQuantity() throws Exception {
         // given
+        OrderCreateReqDto createReqDto = createReqDto("콜라", 7, getDate());
 
         // when
+        int result = orderPromotionService.determineBonusQuantity(createReqDto);
 
         // then
+        assertThat(result).isEqualTo(2);
+    }
+
+    private static OrderCreateReqDto createReqDto(String itemName, int count, LocalDate date) {
+        return new OrderCreateReqDto(itemName, count, date);
     }
 
     private static LocalDate getDate() {

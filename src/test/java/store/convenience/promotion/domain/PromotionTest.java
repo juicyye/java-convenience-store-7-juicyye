@@ -73,9 +73,9 @@ class PromotionTest {
     @ParameterizedTest
     @DisplayName("주문과 프로모션에 따라 보너스 아이템을 얻기 위한 추가 구매수량을 알려준다")
     @MethodSource("providedRemaining")
-    void calculateRemaining(Promotion promotion, int orderCount, int expect) throws Exception {
+    void checkFreeItemAvailability(Promotion promotion, int orderCount, int expect) throws Exception {
         // when
-        int result = promotion.calculateRemaining(orderCount);
+        int result = promotion.checkFreeItemAvailability(orderCount);
 
         // then
         assertThat(result).isEqualTo(expect);
@@ -84,13 +84,13 @@ class PromotionTest {
     private static Stream<Arguments> providedRemaining() {
         return Stream.of(
                 Arguments.arguments(createPromotion(5, 5, 2, 1), 2, 1),
-                Arguments.arguments(createPromotion(5, 5, 3, 2), 4, 1),
                 Arguments.arguments(createPromotion(5, 5, 3, 2), 3, 2),
-                Arguments.arguments(createPromotion(5, 5, 1, 2), 2, 1),
+                Arguments.arguments(createPromotion(5, 5, 3, 2), 4, 0),
                 Arguments.arguments(createPromotion(5, 5, 1, 2), 1, 2),
+                Arguments.arguments(createPromotion(5, 5, 1, 2), 4, 2),
                 Arguments.arguments(createPromotion(5, 5, 1, 1), 1, 1),
                 Arguments.arguments(createPromotion(5, 5, 1, 1), 3, 1),
-                Arguments.arguments(createPromotion(5, 5, 1, 1), 2, 0)
+                Arguments.arguments(createPromotion(5, 5, 4, 2), 10, 2)
         );
 
     }

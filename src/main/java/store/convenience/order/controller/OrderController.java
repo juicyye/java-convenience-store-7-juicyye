@@ -78,7 +78,7 @@ public class OrderController {
         if (exceededCount > 0) {
             return handleExceededPromotion(createReqDto, exceededCount);
         }
-        int bonusCount = orderPromotionService.isEligibleForBonus(createReqDto);
+        int bonusCount = orderPromotionService.getEligibleBonusItemCount(createReqDto);
         if (bonusCount > 0) {
             return handleBonusPromotion(createReqDto, bonusCount);
         }
@@ -91,7 +91,7 @@ public class OrderController {
             return inputView.readCommand();
         });
         if (command.equals(Command.REJECT)) {
-            return orderAdjustmentService.applyBonus(createReqDto, exceededCount);
+            return orderAdjustmentService.excludeExceededQuantity(createReqDto, exceededCount);
         }
         return createReqDto;
     }

@@ -49,9 +49,9 @@ class ProductTest {
     @ParameterizedTest
     @DisplayName("프로모션 활성화에 따라 얼마를 구매해야 프로모션을 받을 수 있는지 확인한다")
     @MethodSource("providedAddCount")
-    void remainingForBonus(Product product, LocalDate currentDate, int orderCount, int expect) throws Exception {
+    void checkFreeItemCount(Product product, LocalDate currentDate, int orderCount, int expect) throws Exception {
         // when
-        int result = product.remainingForBonus(orderCount, currentDate);
+        int result = product.checkFreeItemCount(orderCount, currentDate);
 
         // then
         assertThat(result).isEqualTo(expect);
@@ -93,32 +93,6 @@ class ProductTest {
                 Arguments.arguments(
                         createProduct(Item.COLA, 7, null),
                         getDate(5, 5), 10, 0)
-        );
-    }
-
-
-    @ParameterizedTest
-    @DisplayName("프로모션 활성화에 따른 무료 증정 아이템의 개수를 확인한다")
-    @MethodSource("providedBonusQuantity")
-    void getBonusQuantity(Product product, LocalDate currentDate, int expect) throws Exception {
-        // when
-        int result = product.getBonusQuantity(currentDate);
-
-        // then
-        assertThat(result).isEqualTo(expect);
-    }
-
-    private static Stream<Arguments> providedBonusQuantity() {
-        return Stream.of(
-                Arguments.arguments(
-                        createProduct(Item.COLA, 7, createPromotion(5, 5, 2, 1)),
-                        getDate(5, 5), 1),
-                Arguments.arguments(
-                        createProduct(Item.COLA, 7, createPromotion(5, 5, 2, 1)),
-                        getDate(5, 6), 0),
-                Arguments.arguments(
-                        createProduct(Item.COLA, 7, null),
-                        getDate(5, 5), 0)
         );
     }
 

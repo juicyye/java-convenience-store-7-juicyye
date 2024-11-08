@@ -41,16 +41,9 @@ public class Product {
         return orderCount - unitsPerPromotion * promotions;
     }
 
-    public int remainingForBonus(int orderCount, LocalDate currentDate) {
+    public int checkFreeItemCount(int orderCount, LocalDate currentDate) {
         if (canApplyPromotion(currentDate)) {
-            return promotion.calculateRemaining(orderCount);
-        }
-        return 0;
-    }
-
-    public int getBonusQuantity(LocalDate checkDate) {
-        if (canApplyPromotion(checkDate)) {
-            return promotion.getDetails().bonusQuantity();
+            return promotion.checkFreeItemAvailability(orderCount);
         }
         return 0;
     }
