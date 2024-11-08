@@ -43,11 +43,6 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_FOUND_PRODUCT.getMessage()));
     }
 
-    public Product getPromotedProduct(String itemName) {
-        return productRepository.findByNameAndNoPromotion(itemName)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.NOT_FOUND_PRODUCT.getMessage()));
-    }
-
     public List<ProductInventory> findAll() {
         List<ProductInventory> inventory = new ArrayList<>();
         productRepository.findAll().forEach(

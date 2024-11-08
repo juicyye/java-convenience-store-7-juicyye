@@ -60,5 +60,4 @@ public class Promotion {
         return endDate;
     }
 
-
 }
