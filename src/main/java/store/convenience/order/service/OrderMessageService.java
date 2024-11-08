@@ -49,7 +49,7 @@ public class OrderMessageService {
         Discount discount = order.getDiscount();
         List<ItemCount> itemCounts = discount.getItemCounts();
 
-        sb.append("=============증\t정===============\n");
+        sb.append("=============증\t정===================\n");
         if (!itemCounts.isEmpty()) {
             for (ItemCount itemCount : itemCounts) {
                 sb.append(addNamePadding(itemCount.getItem().getName()))
@@ -63,17 +63,33 @@ public class OrderMessageService {
         Discount discount = order.getDiscount();
         int finalAmount = order.getTotalPrice() - discount.getTotalDiscount();
 
-        sb.append("====================================\n");
+        sb.append("=====================================\n");
+        printTotalPrice(order,sb);
+        printEventDiscount(discount,sb);
+        printMembershipDiscount(discount, sb);
+        printFinalPrice(finalAmount,sb);
+    }
+
+    private void printTotalPrice(Order order, StringBuilder sb) {
         sb.append(addNamePadding("총구매액"))
                 .append(formatWithCommas(order.getTotalOrderCount()))
                 .append(formatWithCommas(order.getTotalPrice()))
                 .append("\n");
-        sb.append(addTotalPadding("행사할인"))
+    }
+
+    private void printEventDiscount(Discount discount, StringBuilder sb) {
+        sb.append(addPaddingEventDiscount("행사할인"))
                 .append(formatWithMinus(discount.getPromotionDiscount()))
                 .append("\n");
-        sb.append(addTotalPadding("멤버십할인"))
+    }
+
+    private void printMembershipDiscount(Discount discount, StringBuilder sb) {
+        sb.append(addPaddingMembershipDiscount("멤버십할인"))
                 .append(formatWithMinus(discount.getMembershipDiscount()))
                 .append("\n");
+    }
+
+    private void printFinalPrice(int finalAmount, StringBuilder sb) {
         sb.append(addTotalPadding("내실돈"))
                 .append(formatWithCommas(finalAmount));
     }
@@ -88,6 +104,14 @@ public class OrderMessageService {
 
     private String addTotalPadding(String input) {
         return String.format("%-5s\t\t\t\t\t\t", input);
+    }
+
+    private String addPaddingEventDiscount(String input) {
+        return String.format("%-25s",input);
+    }
+
+    private String addPaddingMembershipDiscount(String input) {
+        return String.format("%-24s",input);
     }
 
     private String formatWithMinus(int number) {
