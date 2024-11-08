@@ -41,7 +41,7 @@ class ProductRequestMapperTest {
         int quantity = 10;
 
         // when
-        Product product = mapper.create(item,quantity,null);
+        Product product = mapper.create(item, quantity, null);
 
         // then
         assertAll(() -> {

@@ -77,7 +77,7 @@ class OrderPromotionServiceTest {
         OrderCreateReqDto createReqDto = createReqDto("콜라", 10, getDate());
 
         // when
-        int result = orderPromotionService.calculateExcessQuantity(createReqDto);
+        int result = orderPromotionService.determineExcessQuantity(createReqDto);
 
         // then
         assertThat(result).isEqualTo(4);
@@ -90,7 +90,7 @@ class OrderPromotionServiceTest {
         OrderCreateReqDto createReqDto = createReqDto("오렌지주스", 3, getDate());
 
         // when
-        int result = orderPromotionService.calculateBonusQuantity(createReqDto);
+        int result = orderPromotionService.getBonusQuantity(createReqDto);
 
         // then
         assertThat(result).isEqualTo(1);

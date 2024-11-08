@@ -1,10 +1,8 @@
 package store.convenience.product.controller;
 
 import java.util.List;
-import store.convenience.product.domain.ProductInventory;
 import store.convenience.product.service.ProductMessageFormatter;
 import store.convenience.product.service.ProductService;
-import store.global.util.OutputView;
 import store.global.util.Reader;
 import store.global.util.StoreConstant;
 
@@ -18,7 +16,7 @@ public class ProductController {
         this.messageFormatter = messageFormatter;
     }
 
-    public void start(){
+    public void start() {
         processProductData();
     }
 

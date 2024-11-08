@@ -8,7 +8,8 @@ public class StoreDateTimeHolder implements DateTimeHolder {
 
     private static final DateTimeHolder instance = new StoreDateTimeHolder();
 
-    private StoreDateTimeHolder() {}
+    private StoreDateTimeHolder() {
+    }
 
     public static DateTimeHolder getInstance() {
         return instance;

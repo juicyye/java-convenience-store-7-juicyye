@@ -3,6 +3,7 @@ package store.convenience.order.domain;
 import store.convenience.product.domain.Product;
 
 public class OrderProduct {
+
     private Product product;
     private int count;
     private int orderPrice;

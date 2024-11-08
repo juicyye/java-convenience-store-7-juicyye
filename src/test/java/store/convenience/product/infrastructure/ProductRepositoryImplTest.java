@@ -26,7 +26,7 @@ class ProductRepositoryImplTest {
 
     @Nested
     @DisplayName("product를 생성하고 조회할 수 있다")
-    class createProduct{
+    class createProduct {
         Item item = Item.COLA;
         Item noPromotion = Item.ORANGE_JUICE;
         int quantity = 10;

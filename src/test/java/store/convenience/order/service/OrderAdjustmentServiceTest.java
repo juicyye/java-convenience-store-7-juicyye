@@ -3,17 +3,11 @@ package store.convenience.order.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import store.convenience.order.controller.req.OrderCreateReqDto;
-import store.convenience.order.domain.Discount;
 import store.convenience.product.domain.Item;
 import store.convenience.product.domain.Product;
 import store.convenience.product.infrastructure.ProductRepositoryImpl;
@@ -52,13 +46,13 @@ class OrderAdjustmentServiceTest {
         OrderCreateReqDto createReqDto = createReqDto("오렌지주스", 1, getDate());
 
         // when
-        OrderCreateReqDto result = orderAdjustmentService.applyBonus(createReqDto,1);
+        OrderCreateReqDto result = orderAdjustmentService.applyBonus(createReqDto, 1);
 
         // then
         assertThat(result.count()).isEqualTo(2);
     }
 
-    private static  OrderCreateReqDto createReqDto(String itemName, int count, LocalDate date) {
+    private static OrderCreateReqDto createReqDto(String itemName, int count, LocalDate date) {
         return new OrderCreateReqDto(itemName, count, date);
     }
 

@@ -7,15 +7,15 @@ import store.convenience.order.controller.input.InputView;
 import store.convenience.order.infrastructure.OrderRepositoryImpl;
 import store.convenience.order.infrastructure.StoreDateTimeHolder;
 import store.convenience.order.service.DiscountService;
+import store.convenience.order.service.OrderAdjustmentService;
 import store.convenience.order.service.OrderMessageService;
 import store.convenience.order.service.OrderPromotionService;
-import store.convenience.order.service.OrderAdjustmentService;
 import store.convenience.order.service.OrderService;
 import store.convenience.order.service.port.DateTimeHolder;
 import store.convenience.order.service.port.OrderRepository;
 import store.convenience.product.controller.ProductController;
-import store.convenience.product.service.ProductMessageFormatter;
 import store.convenience.product.infrastructure.ProductRepositoryImpl;
+import store.convenience.product.service.ProductMessageFormatter;
 import store.convenience.product.service.ProductMessageService;
 import store.convenience.product.service.ProductService;
 import store.convenience.product.service.port.ProductRepository;
@@ -40,7 +40,7 @@ public class AppConfig {
 
     public OrderController orderController() {
         return new OrderController(orderService(), inputView(), checkService(),
-                orderAdjustmentService(),inputProcessor(), productMessageService(),
+                orderAdjustmentService(), inputProcessor(), productMessageService(),
                 orderMessageService());
     }
 
@@ -68,15 +68,15 @@ public class AppConfig {
         return new OrderAdjustmentService();
     }
 
-    private ProductMessageService productMessageService(){
+    private ProductMessageService productMessageService() {
         return new ProductMessageService(productMessageFormatter(), productService());
     }
 
-    private DiscountService discountService(){
+    private DiscountService discountService() {
         return new DiscountService(checkService());
     }
 
-    private OrderMessageService orderMessageService(){
+    private OrderMessageService orderMessageService() {
         return new OrderMessageService();
     }
 
@@ -116,7 +116,7 @@ public class AppConfig {
         return new InputView(inputHandler());
     }
 
-    private InputProcessor inputProcessor(){
+    private InputProcessor inputProcessor() {
         return new InputProcessor();
     }
 

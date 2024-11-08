@@ -40,12 +40,13 @@ public class InputHandler {
     private void createOrderDto(List<OrderCreateReqDto> createReqDtos, String[] orderParts) {
         String name = orderParts[NAME_INDEX];
         String count = orderParts[COUNT_INDEX];
-        OrderCreateReqDto createReqDto = new OrderCreateReqDto(name, Parser.convertToInt(count), dateTimeHolder.now().toLocalDate());
+        OrderCreateReqDto createReqDto = new OrderCreateReqDto(name, Parser.convertToInt(count),
+                dateTimeHolder.now().toLocalDate());
         createReqDtos.add(createReqDto);
     }
 
     private void validateFormat(String input) {
-        if (!Pattern.matches(StoreConstant.ITEM_PATTERN,input)) {
+        if (!Pattern.matches(StoreConstant.ITEM_PATTERN, input)) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT_FORMAT.getMessage());
         }
     }
@@ -53,4 +54,5 @@ public class InputHandler {
     public Command parseIntention(String input) {
         return Command.of(input);
     }
+
 }

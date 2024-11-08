@@ -1,7 +1,7 @@
 package store.convenience.promotion.infrastrcuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import org.junit.jupiter.api.AfterEach;
@@ -29,7 +29,7 @@ class PromotionRepositoryImplTest {
         int get = 1;
         LocalDate startDate = LocalDate.of(2024, 5, 5);
         LocalDate endDate = LocalDate.of(2024, 10, 2);
-        Promotion promotion = new Promotion(new PromotionDetails(promotionName,buy,get), startDate, endDate);
+        Promotion promotion = new Promotion(new PromotionDetails(promotionName, buy, get), startDate, endDate);
         repository.save(promotion);
 
         // when

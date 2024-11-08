@@ -11,11 +11,11 @@ public class ProductMessageFormatter {
 
     private static final ProductMessageFormatter instance = new ProductMessageFormatter();
 
-    public static ProductMessageFormatter getInstance() {
-        return instance;
+    private ProductMessageFormatter() {
     }
 
-    private ProductMessageFormatter() {
+    public static ProductMessageFormatter getInstance() {
+        return instance;
     }
 
     public String formatInventory(List<ProductInventory> inventories) {

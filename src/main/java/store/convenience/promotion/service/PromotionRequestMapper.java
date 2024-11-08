@@ -1,6 +1,6 @@
 package store.convenience.promotion.service;
 
-import static store.global.util.StoreConstant.*;
+import static store.global.util.StoreConstant.STANDARD_DATE_FORMAT;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -9,7 +9,6 @@ import store.convenience.promotion.domain.Promotion;
 import store.convenience.promotion.domain.PromotionDetails;
 import store.global.util.ErrorMessage;
 import store.global.util.Parser;
-import store.global.util.StoreConstant;
 
 public class PromotionRequestMapper {
 
@@ -31,7 +30,8 @@ public class PromotionRequestMapper {
 
     public Promotion create(String[] promotionParts) {
         return new Promotion(
-                createPromotionDetails(promotionParts[NAME_INDEX], promotionParts[BUY_INDEX], promotionParts[GET_INDEX]),
+                createPromotionDetails(promotionParts[NAME_INDEX], promotionParts[BUY_INDEX],
+                        promotionParts[GET_INDEX]),
                 parseDate(promotionParts[START_DATE_INDEX]),
                 parseDate(promotionParts[END_DATE_INDEX])
         );

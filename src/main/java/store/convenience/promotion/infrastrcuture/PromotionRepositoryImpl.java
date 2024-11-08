@@ -8,15 +8,15 @@ import store.convenience.promotion.service.port.PromotionRepository;
 
 public class PromotionRepositoryImpl implements PromotionRepository {
 
+    private static final PromotionRepository instance = new PromotionRepositoryImpl();
     private final List<Promotion> promotions = new ArrayList<>();
 
-    private static final PromotionRepository instance = new PromotionRepositoryImpl();
+    private PromotionRepositoryImpl() {
+    }
 
     public static PromotionRepository getInstance() {
         return instance;
     }
-
-    private PromotionRepositoryImpl() {}
 
     @Override
     public void save(Promotion promotion) {

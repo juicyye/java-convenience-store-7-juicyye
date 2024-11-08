@@ -7,6 +7,7 @@ import store.global.exception.NotEnoughStockException;
 import store.global.util.ErrorMessage;
 
 public class Product {
+
     private Item item;
     private Integer quantity;
     private Promotion promotion;
@@ -26,7 +27,7 @@ public class Product {
     }
 
     public int calculateExcessQuantity(int orderCount, LocalDate currentDate) {
-        if(checkPromotion(currentDate)) {
+        if (canApplyPromotion(currentDate)) {
             if (orderCount > quantity) {
                 return calculateExceeded(orderCount);
             }
@@ -41,25 +42,32 @@ public class Product {
     }
 
     public int remainingForBonus(int orderCount, LocalDate currentDate) {
-        if(checkPromotion(currentDate)) {
+        if (canApplyPromotion(currentDate)) {
             return promotion.calculateRemaining(orderCount);
         }
         return 0;
     }
 
-    public int calculateBonusQuantity(LocalDate checkDate) {
-        if (checkPromotion(checkDate)) {
+    public int getBonusQuantity(LocalDate checkDate) {
+        if (canApplyPromotion(checkDate)) {
             return promotion.getDetails().bonusQuantity();
         }
         return 0;
     }
 
-    private boolean checkPromotion(LocalDate currentDate) {
-        return promotion != null && promotion.isActivePromotion(currentDate);
+    public int calculateBounsQuantity(int orderCount, LocalDate localDate) {
+        if (canApplyPromotion(localDate)) {
+            return promotion.calculateBonus(orderCount, quantity);
+        }
+        return 0;
     }
 
-    public Optional<Promotion> getApplicablePromotion(){
+    public Optional<Promotion> getApplicablePromotion() {
         return Optional.ofNullable(promotion);
+    }
+
+    public boolean canApplyPromotion(LocalDate checkDate) {
+        return promotion != null && promotion.isActivePromotion(checkDate);
     }
 
     public Item getItem() {
@@ -69,5 +77,4 @@ public class Product {
     public Integer getQuantity() {
         return quantity;
     }
-
 }

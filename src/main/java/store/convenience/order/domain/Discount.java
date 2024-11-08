@@ -30,4 +30,5 @@ public class Discount {
     public int getMembershipDiscount() {
         return membershipDiscount;
     }
+
 }

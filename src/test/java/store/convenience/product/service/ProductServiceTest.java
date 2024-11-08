@@ -2,7 +2,6 @@ package store.convenience.product.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -46,7 +45,8 @@ class ProductServiceTest {
     @ParameterizedTest
     @DisplayName("정확한 입력이 주어지면 Product가 정상적으로 저장 및 조회가 된다")
     @MethodSource("providedProductCreate")
-    void saveProduct(String input, String itemName, int quantity, Item expectItem, boolean hasPromotion) throws Exception {
+    void saveProduct(String input, String itemName, int quantity, Item expectItem, boolean hasPromotion)
+            throws Exception {
         // given
         productService.register(input);
 

@@ -39,4 +39,5 @@ public class OutputView {
     public static void printReceipt(String message) {
         System.out.println(message);
     }
+
 }

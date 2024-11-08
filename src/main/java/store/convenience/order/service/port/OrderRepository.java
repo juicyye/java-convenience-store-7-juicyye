@@ -4,6 +4,7 @@ import java.util.List;
 import store.convenience.order.domain.Order;
 
 public interface OrderRepository {
+
     void save(Order order);
 
     List<Order> findAll();

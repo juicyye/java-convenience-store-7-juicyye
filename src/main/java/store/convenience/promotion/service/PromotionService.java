@@ -6,6 +6,7 @@ import store.global.util.Parser;
 public class PromotionService {
 
     private final PromotionRepository promotionRepository;
+
     private final PromotionRequestMapper mapper = PromotionRequestMapper.getInstance();
 
     public PromotionService(PromotionRepository promotionRepository) {

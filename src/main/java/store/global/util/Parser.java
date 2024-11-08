@@ -1,15 +1,16 @@
 package store.global.util;
 
-import static store.global.util.StoreConstant.*;
+import static store.global.util.StoreConstant.DELIMITER_COMMA;
+import static store.global.util.StoreConstant.DELIMITER_DASH;
 
 import java.util.Arrays;
 
 public abstract class Parser {
 
     public static int convertToInt(String input) {
-        try{
+        try {
             return Integer.parseInt(input);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_NUMBER_FORMAT.getMessage(), e);
         }
     }

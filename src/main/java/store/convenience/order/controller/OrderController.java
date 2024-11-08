@@ -37,7 +37,7 @@ public class OrderController {
 
     public void start() {
         do {
-            try{
+            try {
                 showProductInventory();
                 List<OrderCreateReqDto> createReqDtos = purchaseOrderItem();
                 List<OrderCreateReqDto> updatedCreateReqDtos = new ArrayList<>();
@@ -45,7 +45,7 @@ public class OrderController {
                 orderService.process(updatedCreateReqDtos, hasMemberShip());
                 List<Order> orders = orderService.getAllOrders();
                 printReceipt(orders);
-            }catch (RuntimeException e) {
+            } catch (RuntimeException e) {
                 OutputView.printErrorMessage(e.getMessage());
             }
         } while (processRepurchase());
@@ -74,7 +74,7 @@ public class OrderController {
     }
 
     private OrderCreateReqDto handlerPromotions(OrderCreateReqDto createReqDto) {
-        int exceededCount = orderPromotionService.calculateExcessQuantity(createReqDto);
+        int exceededCount = orderPromotionService.determineExcessQuantity(createReqDto);
         if (exceededCount > 0) {
             return handleExceededPromotion(createReqDto, exceededCount);
         }
@@ -91,7 +91,7 @@ public class OrderController {
             return inputView.readCommand();
         });
         if (command.equals(Command.REJECT)) {
-            return orderAdjustmentService.applyBonus(createReqDto,exceededCount);
+            return orderAdjustmentService.applyBonus(createReqDto, exceededCount);
         }
         return createReqDto;
     }

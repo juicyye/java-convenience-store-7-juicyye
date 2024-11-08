@@ -7,11 +7,11 @@ import store.convenience.order.service.port.OrderRepository;
 
 public class OrderRepositoryImpl implements OrderRepository {
 
+    private static final OrderRepository instance = new OrderRepositoryImpl();
     private final List<Order> orders = new ArrayList<>();
 
-    private static final OrderRepository instance = new OrderRepositoryImpl();
-
-    private OrderRepositoryImpl() {}
+    private OrderRepositoryImpl() {
+    }
 
     public static OrderRepository getInstance() {
         return instance;

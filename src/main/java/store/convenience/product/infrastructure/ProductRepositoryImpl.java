@@ -10,9 +10,8 @@ import store.convenience.product.service.port.ProductRepository;
 
 public class ProductRepositoryImpl implements ProductRepository {
 
-    private final Map<String, List<Product>> products = new HashMap<>();
-
     private static final ProductRepository instance = new ProductRepositoryImpl();
+    private final Map<String, List<Product>> products = new HashMap<>();
 
     private ProductRepositoryImpl() {
     }

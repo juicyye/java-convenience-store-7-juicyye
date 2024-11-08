@@ -1,7 +1,7 @@
 package store.convenience.order.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -47,7 +47,7 @@ class DiscountServiceTest {
     @MethodSource("providedOrderData")
     void OrderDiscount(List<OrderCreateReqDto> orderCreateReqDtos, int expect) throws Exception {
         // when
-        Discount discount = discountService.calculateOrderDiscount(orderCreateReqDtos, true,50);
+        Discount discount = discountService.calculateOrderDiscount(orderCreateReqDtos, true, 50);
 
         // then
         assertAll(() -> {
@@ -55,7 +55,7 @@ class DiscountServiceTest {
         });
     }
 
-    private static Stream<Arguments> providedOrderData(){
+    private static Stream<Arguments> providedOrderData() {
         return Stream.of(
                 Arguments.arguments(List.of(createReqDto("오렌지주스", 4, getDate())), 3600),
                 Arguments.arguments(List.of(createReqDto("콜라", 2, getDate())), 0),
@@ -63,7 +63,7 @@ class DiscountServiceTest {
         );
     }
 
-    private static  OrderCreateReqDto createReqDto(String itemName, int count, LocalDate date) {
+    private static OrderCreateReqDto createReqDto(String itemName, int count, LocalDate date) {
         return new OrderCreateReqDto(itemName, count, date);
     }
 

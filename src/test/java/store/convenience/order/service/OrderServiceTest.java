@@ -31,7 +31,7 @@ class OrderServiceTest {
     private ProductRepository productRepository = ProductRepositoryImpl.getInstance();
     private OrderPromotionService orderPromotionService = new OrderPromotionService(productRepository);
     private final DiscountService discountService = new DiscountService(orderPromotionService);
-    private OrderService orderService = new OrderService(orderRepository, productRepository,discountService);
+    private OrderService orderService = new OrderService(orderRepository, productRepository, discountService);
 
     @BeforeEach
     void setUp() {
@@ -52,7 +52,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("올바른 값을 입력하면 주문을 할 수 있다")
+    @DisplayName("올바른 값을 입력하면 주문이 저장된다")
     void createProcess() throws Exception {
         // given
         List<OrderCreateReqDto> request = List.of(createReqDto("오렌지주스", 4, getDate()));
@@ -88,7 +88,7 @@ class OrderServiceTest {
                 .extracting(Order::getDiscount)
                 .extracting(Discount::getPromotionDiscount, Discount::getMembershipDiscount, Discount::getTotalDiscount)
                 .containsExactlyInAnyOrder(
-                        tuple(3600, (int) Math.floor(3600 * 0.3) / 100 * 100,4600)
+                        tuple(3600, (int) Math.floor(3600 * 0.3) / 100 * 100, 4600)
                 );
     }
 

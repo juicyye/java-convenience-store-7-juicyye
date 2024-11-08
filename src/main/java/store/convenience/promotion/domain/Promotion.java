@@ -1,8 +1,6 @@
 package store.convenience.promotion.domain;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import store.global.util.ErrorMessage;
 
 public class Promotion {
@@ -58,6 +56,11 @@ public class Promotion {
 
     public LocalDate getEndDate() {
         return endDate;
+    }
+
+    public int calculateBonus(int orderCount, Integer quantity) {
+        int availableCount = Math.min(orderCount, quantity);
+        return (availableCount / totalPromotions()) * details.bonusQuantity();
     }
 
 }

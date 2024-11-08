@@ -18,11 +18,11 @@ public class InputView {
         return inputHandler.parseOrderRequests(Console.readLine());
     }
 
-    public Command readCommand(){
+    public Command readCommand() {
         return inputHandler.parseIntention(Console.readLine());
     }
 
-    public void close(){
+    public void close() {
         Console.close();
     }
 

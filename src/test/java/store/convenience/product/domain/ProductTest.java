@@ -100,9 +100,9 @@ class ProductTest {
     @ParameterizedTest
     @DisplayName("프로모션 무료 증정 아이템의 개수를 확인한다")
     @MethodSource("providedBonusQuantity")
-    void calculateBonusQuantity(Product product, LocalDate currentDate, int expect) throws Exception {
+    void getBonusQuantity(Product product, LocalDate currentDate, int expect) throws Exception {
         // when
-        int result = product.calculateBonusQuantity(currentDate);
+        int result = product.getBonusQuantity(currentDate);
 
         // then
         assertThat(result).isEqualTo(expect);

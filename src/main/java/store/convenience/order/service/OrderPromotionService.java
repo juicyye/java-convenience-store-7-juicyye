@@ -16,9 +16,7 @@ public class OrderPromotionService {
 
     public boolean checkPromotion(OrderCreateReqDto createReqDto) {
         Product product = getProduct(createReqDto.itemName());
-        return product.getApplicablePromotion()
-                .map(promotion -> promotion.isActivePromotion(createReqDto.currentDate()))
-                .orElse(false);
+        return product.canApplyPromotion(createReqDto.currentDate());
     }
 
     public int isEligibleForBonus(OrderCreateReqDto createReqDto) {
@@ -26,12 +24,17 @@ public class OrderPromotionService {
         return product.remainingForBonus(createReqDto.count(), createReqDto.currentDate());
     }
 
-    public int calculateBonusQuantity(OrderCreateReqDto createReqDto) {
+    public int determineBonusQuantity(OrderCreateReqDto createReqDto) {
         Product product = getProduct(createReqDto.itemName());
-        return product.calculateBonusQuantity(createReqDto.currentDate());
+        return product.calculateBounsQuantity(createReqDto.count(), createReqDto.currentDate());
     }
 
-    public int calculateExcessQuantity(OrderCreateReqDto createReqDto) {
+    public int getBonusQuantity(OrderCreateReqDto createReqDto) {
+        Product product = getProduct(createReqDto.itemName());
+        return product.getBonusQuantity(createReqDto.currentDate());
+    }
+
+    public int determineExcessQuantity(OrderCreateReqDto createReqDto) {
         Product product = getProduct(createReqDto.itemName());
         return product.calculateExcessQuantity(createReqDto.count(), createReqDto.currentDate());
     }

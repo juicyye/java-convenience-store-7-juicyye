@@ -4,6 +4,7 @@ import store.global.exception.NotFoundException;
 import store.global.util.ErrorMessage;
 
 public enum Item {
+
     COLA("콜라", 1_000),
     CIDER("사이다", 1_000),
     ORANGE_JUICE("오렌지주스", 1_800),
