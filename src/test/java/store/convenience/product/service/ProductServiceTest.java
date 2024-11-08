@@ -70,7 +70,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("findAll 메서드로 값을 호출하여 일급 객체로 감싼다")
+    @DisplayName("findAll 메서드로 값을 호출하면 일급 객체로 감싸서 반환한다")
     void findAll() throws Exception {
         // given
         String cola = "콜라,1000,10,탄산2+1";
@@ -98,10 +98,10 @@ class ProductServiceTest {
         // given
         String cola = "콜라,1000,10,탄산2+1";
         productService.register(cola);
-        productService.addNonPromotionItems();
 
         // when
-        Product result = productService.getNonPromotedProduct("콜라");
+        productService.addNonPromotionItems();
+        Product result = productRepository.findByNameAndNoPromotion("콜라").orElse(null);
 
         // then
         assertThat(result).isNotNull();

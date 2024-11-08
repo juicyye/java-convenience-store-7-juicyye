@@ -78,4 +78,5 @@ public class Product {
     public Integer getQuantity() {
         return quantity;
     }
+
 }

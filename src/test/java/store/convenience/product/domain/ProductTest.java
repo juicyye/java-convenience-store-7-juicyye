@@ -122,6 +122,31 @@ class ProductTest {
         );
     }
 
+    @ParameterizedTest
+    @DisplayName("주문개수에 따른 무료 증정 아이템 개수를 확인한다")
+    @MethodSource("providedOrderBonus")
+    void calculateBonusQuantity(Product product, LocalDate targetDate, int orderCount, int expect) throws Exception {
+        // when
+        int result = product.calculateBonusQuantity(orderCount, targetDate);
+
+        // then
+        assertThat(result).isEqualTo(expect);
+    }
+
+    private static Stream<Arguments> providedOrderBonus() {
+        return Stream.of(
+                Arguments.arguments(
+                        createProduct(Item.COLA, 7, createPromotion(5, 5, 2, 1)),
+                        getDate(5, 5), 6, 2),
+                Arguments.arguments(
+                        createProduct(Item.COLA, 7, createPromotion(5, 5, 2, 1)),
+                        getDate(5, 5), 5, 1),
+                Arguments.arguments(
+                        createProduct(Item.COLA, 7, null),
+                        getDate(5, 6), 6,0)
+        );
+    }
+
     private static Product createProduct(Item item, int quantity, Promotion promotion) {
         return new Product(item, quantity, promotion);
     }
