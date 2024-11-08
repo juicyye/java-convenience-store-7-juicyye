@@ -21,8 +21,8 @@ class PromotionServiceTest {
     }
 
     @Test
-    @DisplayName("정확한 입력이 주어지면 Promotion이 정상적으로 생성된다")
-    void create() throws Exception {
+    @DisplayName("정확한 입력이 주어지면 Promotion이 정상적으로 저장된다")
+    void savePromotion() throws Exception {
         // given
         String input = "탄산2+1,2,1,2024-01-01,2024-12-31";
 
