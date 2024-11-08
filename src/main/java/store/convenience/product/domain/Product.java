@@ -55,9 +55,10 @@ public class Product {
         return 0;
     }
 
-    public int calculateBounsQuantity(int orderCount, LocalDate localDate) {
+    public int calculateBonusQuantity(int orderCount, LocalDate localDate) {
         if (canApplyPromotion(localDate)) {
-            return promotion.calculateBonus(orderCount, quantity);
+            int availableCount = Math.min(orderCount, quantity);
+            return promotion.calculateBonus(availableCount);
         }
         return 0;
     }

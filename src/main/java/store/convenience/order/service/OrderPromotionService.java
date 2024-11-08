@@ -26,7 +26,7 @@ public class OrderPromotionService {
 
     public int determineBonusQuantity(OrderCreateReqDto createReqDto) {
         Product product = getProduct(createReqDto.itemName());
-        return product.calculateBounsQuantity(createReqDto.count(), createReqDto.currentDate());
+        return product.calculateBonusQuantity(createReqDto.count(), createReqDto.currentDate());
     }
 
     public int getBonusQuantity(OrderCreateReqDto createReqDto) {

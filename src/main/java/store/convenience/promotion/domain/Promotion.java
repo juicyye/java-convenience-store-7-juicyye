@@ -42,6 +42,10 @@ public class Promotion {
         return ((orderCount + total-1) / total) * total;
     }
 
+    public int calculateBonus(int availableCount) {
+        return (availableCount / totalPromotions()) * details.bonusQuantity();
+    }
+
     public int totalPromotions() {
         return details.purchaseQuantity() + details.bonusQuantity();
     }
@@ -56,11 +60,6 @@ public class Promotion {
 
     public LocalDate getEndDate() {
         return endDate;
-    }
-
-    public int calculateBonus(int orderCount, Integer quantity) {
-        int availableCount = Math.min(orderCount, quantity);
-        return (availableCount / totalPromotions()) * details.bonusQuantity();
     }
 
 }
