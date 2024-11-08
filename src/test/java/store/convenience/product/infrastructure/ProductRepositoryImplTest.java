@@ -43,7 +43,7 @@ class ProductRepositoryImplTest {
         }
 
         @Test
-        @DisplayName("프로모션이 있는 아이템을 먼저 조회한다")
+        @DisplayName("프로모션 아이템과 없는 아이템이 있는 경우 프로모션 아이템을 먼저 조회한다")
         void findFirstPromotion() throws Exception {
             // when
             Product result = productRepository.findByName(item.getName()).orElse(null);
@@ -57,7 +57,7 @@ class ProductRepositoryImplTest {
         }
 
         @Test
-        @DisplayName("프로모션이 없으면 일반 아이템을 조회한다")
+        @DisplayName("프로모션이 있는 아이템이 없으면 일반 아이템을 조회한다")
         void findNoPromotionIfNoPromotion() throws Exception {
             // when
             Product result = productRepository.findByName(noPromotion.getName()).orElse(null);

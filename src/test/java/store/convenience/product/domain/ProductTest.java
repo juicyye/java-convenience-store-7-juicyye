@@ -47,7 +47,7 @@ class ProductTest {
     }
 
     @ParameterizedTest
-    @DisplayName("프로모션 기간에 따라 얼마를 구매해야 프로모션을 받을 수 있는지 확인한다")
+    @DisplayName("프로모션 활성화에 따라 얼마를 구매해야 프로모션을 받을 수 있는지 확인한다")
     @MethodSource("providedAddCount")
     void remainingForBonus(Product product, LocalDate currentDate, int orderCount, int expect) throws Exception {
         // when
@@ -72,7 +72,7 @@ class ProductTest {
     }
 
     @ParameterizedTest
-    @DisplayName("프로모션 기간에 따라 프로모션 재고를 초과한 수량을 알려준다")
+    @DisplayName("프로모션 활성화와 프로모션 재고에 따른 초과한 수량을 알려준다")
     @MethodSource("providedExcessData")
     void calculateExcessQuantity(Product product, LocalDate currentDate, int orderCount, int expect) throws Exception {
         // when
@@ -98,7 +98,7 @@ class ProductTest {
 
 
     @ParameterizedTest
-    @DisplayName("프로모션 무료 증정 아이템의 개수를 확인한다")
+    @DisplayName("프로모션 활성화에 따른 무료 증정 아이템의 개수를 확인한다")
     @MethodSource("providedBonusQuantity")
     void getBonusQuantity(Product product, LocalDate currentDate, int expect) throws Exception {
         // when
@@ -123,7 +123,7 @@ class ProductTest {
     }
 
     @ParameterizedTest
-    @DisplayName("주문개수에 따른 무료 증정 아이템 개수를 확인한다")
+    @DisplayName("프로모션 활성화와 주문개수에 따른 무료 증정 아이템 개수를 확인한다")
     @MethodSource("providedOrderBonus")
     void calculateBonusQuantity(Product product, LocalDate targetDate, int orderCount, int expect) throws Exception {
         // when
