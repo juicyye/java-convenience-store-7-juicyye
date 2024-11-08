@@ -29,7 +29,7 @@ class ProductRequestMapperTest {
         assertAll(() -> {
             assertThat(product.getItem()).isEqualByComparingTo(Item.COLA);
             assertThat(product.getQuantity()).isEqualTo(10);
-            assertThat(product.getPromotion()).isEqualTo(promotion);
+            assertThat(product.getApplicablePromotion().get()).isEqualTo(promotion);
         });
     }
 
@@ -47,7 +47,7 @@ class ProductRequestMapperTest {
         assertAll(() -> {
             assertThat(product.getItem()).isEqualByComparingTo(item);
             assertThat(product.getQuantity()).isEqualTo(quantity);
-            assertThat(product.getPromotion() == null).isEqualTo(true);
+            assertThat(product.getApplicablePromotion()).isEmpty();
         });
     }
 

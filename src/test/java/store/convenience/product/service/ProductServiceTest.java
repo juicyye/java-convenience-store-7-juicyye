@@ -2,6 +2,7 @@ package store.convenience.product.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -56,7 +57,7 @@ class ProductServiceTest {
         assertAll(() -> {
             assertThat(result).isNotNull();
             assertThat(result.getQuantity()).isEqualTo(quantity);
-            assertThat(result.getPromotion() != null).isEqualTo(hasPromotion);
+            assertThat(result.getApplicablePromotion().isPresent()).isEqualTo(hasPromotion);
             assertThat(result.getItem()).isEqualByComparingTo(expectItem);
         });
     }

@@ -1,6 +1,7 @@
 package store.convenience.product.domain;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import store.convenience.promotion.domain.Promotion;
 import store.global.exception.NotEnoughStockException;
 import store.global.util.ErrorMessage;
@@ -34,31 +35,32 @@ public class Product {
     }
 
     private int calculateExceeded(int orderCount) {
-        int promotions = getPromotion().totalPromotions();
+        int promotions = promotion.totalPromotions();
         int unitsPerPromotion = quantity / promotions;
         return orderCount - unitsPerPromotion * promotions;
     }
 
     public int remainingForBonus(int orderCount, LocalDate currentDate) {
         if(checkPromotion(currentDate)) {
-            return getPromotion().calculateRemaining(orderCount);
+            return promotion.calculateRemaining(orderCount);
         }
         return 0;
     }
 
-    public int calculateBonusQuantity(int orderCount, LocalDate checkDate) {
+    public int calculateBonusQuantity(LocalDate checkDate) {
         if (checkPromotion(checkDate)) {
-            int bonusQuantity = getPromotion().getDetails().bonusQuantity();
-            int availableCount = Math.min(orderCount, quantity);
-            return availableCount / getPromotion().totalPromotions() * bonusQuantity;
+            return promotion.getDetails().bonusQuantity();
         }
         return 0;
     }
 
     private boolean checkPromotion(LocalDate currentDate) {
-        return getPromotion() != null && promotion.isActivePromotion(currentDate);
+        return promotion != null && promotion.isActivePromotion(currentDate);
     }
 
+    public Optional<Promotion> getApplicablePromotion(){
+        return Optional.ofNullable(promotion);
+    }
 
     public Item getItem() {
         return item;
@@ -66,10 +68,6 @@ public class Product {
 
     public Integer getQuantity() {
         return quantity;
-    }
-
-    public Promotion getPromotion() {
-        return promotion;
     }
 
 }

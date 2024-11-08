@@ -37,17 +37,17 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     public Optional<Product> findByName(String productName) {
         return products.get(productName).stream()
-                .filter(i -> i.getPromotion() != null)
+                .filter(i -> i.getApplicablePromotion().isPresent())
                 .findFirst()
                 .or(() -> products.get(productName).stream()
-                        .filter(i -> i.getPromotion() == null)
+                        .filter(i -> i.getApplicablePromotion().isEmpty())
                         .findFirst());
     }
 
     @Override
     public Optional<Product> findByNameAndNoPromotion(String productName) {
         return products.get(productName).stream()
-                .filter(i -> i.getPromotion() == null)
+                .filter(i -> i.getApplicablePromotion().isEmpty())
                 .findFirst();
     }
 

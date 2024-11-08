@@ -52,7 +52,7 @@ public class OrderService {
 
     private Result processPromotionAndStock(OrderCreateReqDto createReqDto, Product product, List<OrderProduct> orderProducts,
                                             int orderCount) {
-        if (isPromotionActive(product.getPromotion(), createReqDto.currentDate())) {
+        if (isPromotionActive(product.getApplicablePromotion().get(), createReqDto.currentDate())) {
             try {
                 orderProducts.add(OrderProduct.create(product, product.getItem().getPrice(), orderCount));
                 return null;

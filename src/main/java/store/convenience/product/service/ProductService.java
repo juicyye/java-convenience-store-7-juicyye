@@ -54,8 +54,8 @@ public class ProductService {
     public void addNonPromotionItems() {
         List<List<Product>> products = productRepository.findAll();
         for (List<Product> product : products) {
-            boolean hasPromotion = product.stream().anyMatch(item -> item.getPromotion() != null);
-            boolean hasNormal = product.stream().anyMatch(item -> item.getPromotion() == null);
+            boolean hasPromotion = product.stream().anyMatch(item -> item.getApplicablePromotion().isPresent());
+            boolean hasNormal = product.stream().anyMatch(item -> item.getApplicablePromotion().isEmpty());
 
             if (hasPromotion && !hasNormal) {
                 Item item = product.getFirst().getItem();

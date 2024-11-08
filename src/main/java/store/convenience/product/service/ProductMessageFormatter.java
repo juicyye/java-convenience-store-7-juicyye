@@ -1,9 +1,11 @@
 package store.convenience.product.service;
 
 import java.util.List;
+import java.util.Optional;
 import store.convenience.product.domain.Item;
 import store.convenience.product.domain.Product;
 import store.convenience.product.domain.ProductInventory;
+import store.convenience.promotion.domain.Promotion;
 
 public class ProductMessageFormatter {
 
@@ -47,15 +49,12 @@ public class ProductMessageFormatter {
     }
 
     private String formatItemLine(Item item) {
-        return String.format("- %s %s원 ",
-                item.getName(),
-                String.format("%,d",item.getPrice()));
+        return String.format("- %s %s원 ", item.getName(), String.format("%,d", item.getPrice()));
     }
 
     private void appendPromotionDetails(StringBuilder sb, Product product) {
-        if (product.getPromotion() != null) {
-            sb.append(product.getPromotion().getDetails().name());
-        }
+        Optional<Promotion> applicablePromotion = product.getApplicablePromotion();
+        applicablePromotion.ifPresent(i -> sb.append(i.getDetails().name()));
     }
 
 }
