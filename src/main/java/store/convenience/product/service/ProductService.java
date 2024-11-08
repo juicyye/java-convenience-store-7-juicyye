@@ -1,5 +1,6 @@
 package store.convenience.product.service;
 
+import static store.global.util.StoreConstant.*;
 import static store.global.util.StoreConstant.PROMOTION_INDEX;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import store.convenience.promotion.service.port.PromotionRepository;
 import store.global.exception.NotFoundException;
 import store.global.util.ErrorMessage;
 import store.global.util.Parser;
+import store.global.util.StoreConstant;
 
 public class ProductService {
 
@@ -54,7 +56,7 @@ public class ProductService {
 
             if (hasPromotion && !hasNormal) {
                 Item item = product.getFirst().getItem();
-                productRepository.save(mapper.create(item, 0, null));
+                productRepository.save(mapper.create(item, DEFAULT_QUANTITY, null));
             }
         }
     }

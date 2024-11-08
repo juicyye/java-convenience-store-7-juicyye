@@ -1,5 +1,7 @@
 package store.convenience.order.controller;
 
+import static store.global.util.StoreConstant.STANDARD_NUMBER;
+
 import java.util.ArrayList;
 import java.util.List;
 import store.convenience.order.controller.input.InputProcessor;
@@ -75,11 +77,11 @@ public class OrderController {
 
     private OrderCreateReqDto handlerPromotions(OrderCreateReqDto createReqDto) {
         int exceededCount = orderPromotionService.determineExcessQuantity(createReqDto);
-        if (exceededCount > 0) {
+        if (exceededCount > STANDARD_NUMBER) {
             return handleExceededPromotion(createReqDto, exceededCount);
         }
         int bonusCount = orderPromotionService.getEligibleBonusItemCount(createReqDto);
-        if (bonusCount > 0) {
+        if (bonusCount > STANDARD_NUMBER) {
             return handleBonusPromotion(createReqDto, bonusCount);
         }
         return createReqDto;

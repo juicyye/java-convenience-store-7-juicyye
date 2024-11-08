@@ -1,5 +1,6 @@
 package store.convenience.order.service;
 
+import static store.global.util.StoreConstant.DISCOUNT_MULTIPLIER;
 import static store.global.util.StoreConstant.MAX_MEMBERSHIP_DISCOUNT;
 import static store.global.util.StoreConstant.MEMBERSHIP_RATE;
 
@@ -44,7 +45,7 @@ public class DiscountService {
             return 0;
         }
         double membershipDiscount = Math.min(MAX_MEMBERSHIP_DISCOUNT, priceAfterPromotion * MEMBERSHIP_RATE);
-        return (int) Math.floor(membershipDiscount / 100) * 100;
+        return (int) Math.floor(membershipDiscount / DISCOUNT_MULTIPLIER) * DISCOUNT_MULTIPLIER;
     }
 
 }

@@ -1,5 +1,6 @@
 package store.convenience.order.controller.input;
 
+import static store.global.util.StoreConstant.BRACKET_REGEX;
 import static store.global.util.StoreConstant.COUNT_INDEX;
 import static store.global.util.StoreConstant.NAME_INDEX;
 
@@ -31,7 +32,7 @@ public class InputHandler {
     private void parseOrderData(String[] dataSegments, List<OrderCreateReqDto> createReqDtos) {
         for (String data : dataSegments) {
             validateFormat(data);
-            String input = data.replaceAll("[\\[\\]]", "");
+            String input = data.replaceAll(BRACKET_REGEX, "");
             String[] orderParts = Parser.splitByDash(input);
             createOrderDto(createReqDtos, orderParts);
         }
