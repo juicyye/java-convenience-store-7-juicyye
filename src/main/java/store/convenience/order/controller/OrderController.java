@@ -116,8 +116,12 @@ public class OrderController {
     }
 
     private boolean hasMemberShip() {
+        Command command = inputProcessor.execute(() -> {
+            OutputView.printMembership();
+            return inputView.readCommand();
+        });
         OutputView.printMembership();
-        return inputView.readCommand().equals(Command.ACCEPT);
+        return command.equals(Command.ACCEPT);
     }
 
     private boolean processRepurchase() {
