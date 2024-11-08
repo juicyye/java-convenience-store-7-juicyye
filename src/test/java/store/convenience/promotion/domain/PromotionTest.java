@@ -49,14 +49,11 @@ class PromotionTest {
     }
 
     @ParameterizedTest
-    @DisplayName("특정한 날짜가 프로모션에 따라 반환값이 달라진다")
+    @DisplayName("입력된 날짜에 따라 프로모션 활성 상태를 확인한다")
     @MethodSource("providedDate")
     void isActivePromotion(LocalDate inputValue, boolean expectResult) throws Exception {
         // given
-        PromotionDetails details = getDetails("test", 2, 3);
-        LocalDate startDate = getDate(2, 1);
-        LocalDate endDate = getDate(3, 9);
-        Promotion promotion = new Promotion(details, startDate, endDate);
+        Promotion promotion = createPromotion(2, 1, 2, 1);
 
         // when
         boolean result = promotion.isActivePromotion(inputValue);
@@ -68,10 +65,42 @@ class PromotionTest {
     private static Stream<Arguments> providedDate() {
         return Stream.of(
                 Arguments.arguments(getDate(2, 1), true),
-                Arguments.arguments(getDate(3, 9), true),
                 Arguments.arguments(getDate(1, 31), false),
-                Arguments.arguments(getDate(3, 10), false)
+                Arguments.arguments(getDate(2, 2), false)
         );
+    }
+
+    @ParameterizedTest
+    @DisplayName("주문과 프로모션에 따라 보너스 수량을 반환받는다")
+    @MethodSource("calculateRemaining")
+    void calculateRemaining(Promotion promotion, int orderCount, int expect) throws Exception {
+        // when
+        int result = promotion.calculateRemaining(orderCount);
+
+        // then
+        assertThat(result).isEqualTo(expect);
+    }
+
+    private static Stream<Arguments> calculateRemaining() {
+        return Stream.of(
+                Arguments.arguments(createPromotion(5, 5, 2, 1), 2, 1),
+                Arguments.arguments(createPromotion(5, 5, 3, 2), 4, 1),
+                Arguments.arguments(createPromotion(5, 5, 3, 2), 3, 2),
+                Arguments.arguments(createPromotion(5, 5, 1, 2), 2, 1),
+                Arguments.arguments(createPromotion(5, 5, 1, 2), 1, 2),
+                Arguments.arguments(createPromotion(5, 5, 1, 1), 1, 1),
+                Arguments.arguments(createPromotion(5, 5, 1, 1), 3, 1),
+                Arguments.arguments(createPromotion(5, 5, 1, 1), 2, 0)
+        );
+
+    }
+
+    private static Promotion createPromotion(int promotionMonth, int promotionDay, int purchaseQuantity,
+                                             int bonusQuantity) {
+        PromotionDetails details = new PromotionDetails("test", purchaseQuantity, bonusQuantity);
+        LocalDate startDate = getDate(promotionMonth, promotionDay);
+        LocalDate endDate = getDate(promotionMonth, promotionDay);
+        return new Promotion(details, startDate, endDate);
     }
 
     private static LocalDate getDate(int month, int dayOfMonth) {

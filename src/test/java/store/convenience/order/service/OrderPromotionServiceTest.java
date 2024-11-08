@@ -102,7 +102,7 @@ class OrderPromotionServiceTest {
 
     @Test
     @DisplayName("프로모션 이벤트 ")
-    void 이름_test() throws Exception {
+    void 이름_calculateRemaining() throws Exception {
         // given
 
         // when

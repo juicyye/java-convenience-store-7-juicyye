@@ -1,6 +1,8 @@
 package store.convenience.promotion.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import store.global.util.ErrorMessage;
 
 public class Promotion {
@@ -22,37 +24,24 @@ public class Promotion {
         }
     }
 
-    public boolean isActivePromotion(LocalDate valueDate) {
-        return !valueDate.isBefore(startDate) && !valueDate.isAfter(endDate);
+    public boolean isActivePromotion(LocalDate checkDate) {
+        return !checkDate.isBefore(startDate) && !checkDate.isAfter(endDate);
     }
 
-    public int calculateBonusQuantity(int orderCount, int quantity) {
-        int bonusQuantity = details.bonusQuantity();
-        int availableCount = Math.min(orderCount, quantity);
-        return availableCount / totalPromotions() * bonusQuantity;
-    }
+    public int calculateRemaining(int orderCount) {
+        int nearestMultiple = getNearestMultiple(orderCount);
+        int bonusQuantity = getDetails().bonusQuantity();
+        int difference = nearestMultiple - orderCount;
 
-    public int isBonusApplicable(int orderCount) {
-        int purchaseQuantity = details.purchaseQuantity();
-        int bonusQuantity = details.bonusQuantity();
-        if (purchaseQuantity == 1) {
-            return isSinglePurchaseWithOddOrder(orderCount,bonusQuantity);
-        }
-        return isEligibleForPromotion(orderCount, purchaseQuantity,bonusQuantity);
-    }
-
-    private int isSinglePurchaseWithOddOrder(int orderCount,int bonusQuantity) {
-        if (orderCount % 2 == 1) {
-            return bonusQuantity;
+        if (difference > 0 && difference <= bonusQuantity) {
+            return difference;
         }
         return 0;
     }
 
-    private int isEligibleForPromotion(int orderCount, int purchaseQuantity, int bonusQuantity) {
-        if ((orderCount - purchaseQuantity) % totalPromotions() == 0) {
-            return bonusQuantity;
-        }
-        return 0;
+    private int getNearestMultiple(int orderCount) {
+        int total = totalPromotions();
+        return ((orderCount + total-1) / total) * total;
     }
 
     public int totalPromotions() {
