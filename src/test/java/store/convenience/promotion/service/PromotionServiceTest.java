@@ -3,7 +3,7 @@ package store.convenience.promotion.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.convenience.promotion.domain.Promotion;
@@ -12,23 +12,23 @@ import store.convenience.promotion.service.port.PromotionRepository;
 
 class PromotionServiceTest {
 
-    private PromotionService promotionService;
+    private PromotionRepository promotionRepository = PromotionRepositoryImpl.getInstance();
+    private PromotionService promotionService = new PromotionService(promotionRepository);
 
-    @BeforeEach
-    void setUp() {
-        PromotionRepository repository = PromotionRepositoryImpl.getInstance();
-        promotionService = new PromotionService(repository);
+    @AfterEach
+    void tearDown() {
+        promotionRepository.clear();
     }
 
     @Test
-    @DisplayName("createDto에 정확한 값이 들어오면 promotion을 생성한다")
+    @DisplayName("정확한 입력이 주어지면 Promotion이 정상적으로 생성된다")
     void create() throws Exception {
         // given
         String input = "탄산2+1,2,1,2024-01-01,2024-12-31";
-        promotionService.create(input);
 
         // when
-        Promotion result = promotionService.getPromotion("탄산2+1");
+        promotionService.create(input);
+        Promotion result = promotionRepository.findByName("탄산2+1").orElse(null);
 
         // then
         assertAll(() -> {
