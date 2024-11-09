@@ -31,8 +31,8 @@ public class Promotion {
         int bonusQuantity = getDetails().bonusQuantity();
         int difference = nearestMultiple - orderCount;
 
-        if (difference == bonusQuantity) {
-            return bonusQuantity;
+        if (difference > 0 && difference <= bonusQuantity) {
+            return difference;
         }
         return 0;
     }

@@ -49,9 +49,9 @@ class ProductTest {
     @ParameterizedTest
     @DisplayName("프로모션 활성화에 따라 얼마를 구매해야 프로모션을 받을 수 있는지 확인한다")
     @MethodSource("providedAddCount")
-    void checkFreeItemCount(Product product, LocalDate currentDate, int orderCount, int expect) throws Exception {
+    void remainingBonusQuantity(Product product, LocalDate currentDate, int orderCount, int expect) throws Exception {
         // when
-        int result = product.checkFreeItemCount(orderCount, currentDate);
+        int result = product.remainingBonusQuantity(orderCount, currentDate);
 
         // then
         assertThat(result).isEqualTo(expect);

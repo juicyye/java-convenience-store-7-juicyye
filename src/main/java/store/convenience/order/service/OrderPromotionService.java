@@ -21,7 +21,7 @@ public class OrderPromotionService {
 
     public int getEligibleBonusItemCount(OrderCreateReqDto createReqDto) {
         Product product = getProduct(createReqDto.itemName());
-        return product.checkFreeItemCount(createReqDto.count(), createReqDto.currentDate());
+        return product.remainingBonusQuantity(createReqDto.count(), createReqDto.currentDate());
     }
 
     public int determineBonusQuantity(OrderCreateReqDto createReqDto) {

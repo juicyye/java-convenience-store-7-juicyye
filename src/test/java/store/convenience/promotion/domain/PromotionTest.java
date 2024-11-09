@@ -85,9 +85,9 @@ class PromotionTest {
         return Stream.of(
                 Arguments.arguments(createPromotion(5, 5, 2, 1), 2, 1),
                 Arguments.arguments(createPromotion(5, 5, 3, 2), 3, 2),
-                Arguments.arguments(createPromotion(5, 5, 3, 2), 4, 0),
+                Arguments.arguments(createPromotion(5, 5, 3, 2), 4, 1),
                 Arguments.arguments(createPromotion(5, 5, 1, 2), 1, 2),
-                Arguments.arguments(createPromotion(5, 5, 1, 2), 4, 2),
+                Arguments.arguments(createPromotion(5, 5, 1, 2), 2, 1),
                 Arguments.arguments(createPromotion(5, 5, 1, 1), 1, 1),
                 Arguments.arguments(createPromotion(5, 5, 1, 1), 3, 1),
                 Arguments.arguments(createPromotion(5, 5, 4, 2), 10, 2)
