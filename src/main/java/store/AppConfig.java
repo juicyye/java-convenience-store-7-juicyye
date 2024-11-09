@@ -15,7 +15,6 @@ import store.convenience.order.service.port.DateTimeHolder;
 import store.convenience.order.service.port.OrderRepository;
 import store.convenience.product.controller.ProductController;
 import store.convenience.product.infrastructure.ProductRepositoryImpl;
-import store.convenience.product.service.ProductMessageFormatter;
 import store.convenience.product.service.ProductMessageService;
 import store.convenience.product.service.ProductService;
 import store.convenience.product.service.port.ProductRepository;
@@ -31,7 +30,7 @@ public class AppConfig {
      */
 
     public ProductController productController() {
-        return new ProductController(productService(), productMessageFormatter());
+        return new ProductController(productService());
     }
 
     public PromotionController promotionController() {
@@ -69,7 +68,7 @@ public class AppConfig {
     }
 
     private ProductMessageService productMessageService() {
-        return new ProductMessageService(productMessageFormatter(), productService());
+        return new ProductMessageService(productService());
     }
 
     private DiscountService discountService() {
@@ -99,10 +98,6 @@ public class AppConfig {
     /**
      * 기타
      */
-
-    private ProductMessageFormatter productMessageFormatter() {
-        return ProductMessageFormatter.getInstance();
-    }
 
     private DateTimeHolder dateTimeHolder() {
         return StoreDateTimeHolder.getInstance();
