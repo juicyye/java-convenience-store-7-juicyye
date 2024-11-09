@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import store.convenience.promotion.domain.Promotion;
 import store.global.exception.NotEnoughStockException;
-import store.global.util.ErrorMessage;
+import store.global.exception.ErrorMessage;
 
 public class Product {
 

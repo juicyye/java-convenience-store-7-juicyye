@@ -23,7 +23,7 @@ import store.convenience.product.service.port.ProductRepository;
 import store.convenience.promotion.domain.Promotion;
 import store.convenience.promotion.domain.PromotionDetails;
 import store.global.exception.NotEnoughStockException;
-import store.global.util.ErrorMessage;
+import store.global.exception.ErrorMessage;
 
 class OrderServiceTest {
 

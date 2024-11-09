@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import store.convenience.order.controller.Command;
 import store.convenience.order.controller.req.OrderCreateReqDto;
 import store.convenience.order.service.port.DateTimeHolder;
-import store.global.util.ErrorMessage;
+import store.global.exception.ErrorMessage;
 import store.global.util.Parser;
 import store.global.util.StoreConstant;
 

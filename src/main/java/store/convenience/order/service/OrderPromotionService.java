@@ -4,7 +4,7 @@ import store.convenience.order.controller.req.OrderCreateReqDto;
 import store.convenience.product.domain.Product;
 import store.convenience.product.service.port.ProductRepository;
 import store.global.exception.NotFoundException;
-import store.global.util.ErrorMessage;
+import store.global.exception.ErrorMessage;
 
 public class OrderPromotionService {
 

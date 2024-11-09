@@ -1,7 +1,7 @@
 package store.convenience.product.domain;
 
 import store.global.exception.NotFoundException;
-import store.global.util.ErrorMessage;
+import store.global.exception.ErrorMessage;
 
 public enum Item {
 

@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.global.exception.NotFoundException;
-import store.global.util.ErrorMessage;
+import store.global.exception.ErrorMessage;
 
 class ItemTest {
 

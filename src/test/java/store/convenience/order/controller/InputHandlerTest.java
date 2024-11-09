@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import store.convenience.order.controller.input.InputHandler;
 import store.convenience.order.controller.req.OrderCreateReqDto;
 import store.convenience.order.service.port.DateTimeHolder;
-import store.global.util.ErrorMessage;
+import store.global.exception.ErrorMessage;
 import store.mock.FakeDateTimeHolder;
 
 class InputHandlerTest {

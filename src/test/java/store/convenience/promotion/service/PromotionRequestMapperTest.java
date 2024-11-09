@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.convenience.promotion.domain.Promotion;
-import store.global.util.ErrorMessage;
+import store.global.exception.ErrorMessage;
 
 class PromotionRequestMapperTest {
 

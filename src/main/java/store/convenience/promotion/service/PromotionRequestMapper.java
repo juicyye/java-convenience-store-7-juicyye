@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import store.convenience.promotion.domain.Promotion;
 import store.convenience.promotion.domain.PromotionDetails;
-import store.global.util.ErrorMessage;
+import store.global.exception.ErrorMessage;
 import store.global.util.Parser;
 
 public class PromotionRequestMapper {

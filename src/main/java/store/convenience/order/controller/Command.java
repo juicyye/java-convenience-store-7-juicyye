@@ -1,6 +1,6 @@
 package store.convenience.order.controller;
 
-import store.global.util.ErrorMessage;
+import store.global.exception.ErrorMessage;
 
 public enum Command {
 

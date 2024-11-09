@@ -1,4 +1,4 @@
-package store.global.util;
+package store.global.exception;
 
 public enum ErrorMessage {
 

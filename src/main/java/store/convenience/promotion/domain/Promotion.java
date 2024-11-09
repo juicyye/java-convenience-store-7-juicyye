@@ -1,7 +1,7 @@
 package store.convenience.promotion.domain;
 
 import java.time.LocalDate;
-import store.global.util.ErrorMessage;
+import store.global.exception.ErrorMessage;
 
 public class Promotion {
 

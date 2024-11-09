@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import store.global.exception.ErrorMessage;
 import store.global.exception.ReadException;
 
 public class Reader {
