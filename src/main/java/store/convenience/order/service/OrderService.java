@@ -7,6 +7,7 @@ import store.convenience.order.domain.Discount;
 import store.convenience.order.domain.Order;
 import store.convenience.order.domain.OrderProduct;
 import store.convenience.order.service.port.OrderRepository;
+import store.convenience.product.domain.Item;
 import store.convenience.product.domain.Product;
 import store.convenience.product.service.port.ProductRepository;
 import store.global.exception.NotEnoughStockException;
@@ -27,11 +28,14 @@ public class OrderService {
     }
 
     public void process(List<OrderCreateReqDto> createReqDtos, boolean hasMembership) {
+        Discount discount = processDiscount(createReqDtos, hasMembership);
+
         List<OrderProduct> orderProducts = new ArrayList<>();
         for (OrderCreateReqDto createReqDto : createReqDtos) {
             handlerOrder(createReqDto, orderProducts);
         }
-        processDiscountAndSave(createReqDtos, hasMembership, orderProducts);
+
+        orderRepository.save(Order.create(discount, orderProducts));
     }
 
     private void handlerOrder(OrderCreateReqDto createReqDto, List<OrderProduct> orderProducts) {
@@ -45,11 +49,9 @@ public class OrderService {
         }
     }
 
-    private void processDiscountAndSave(List<OrderCreateReqDto> createReqDtos, boolean hasMembership,
-                                        List<OrderProduct> orderProducts) {
-        int totalPrice = calculateOrderAmount(orderProducts);
-        Discount discount = discountService.calculateOrderDiscount(createReqDtos, hasMembership, totalPrice);
-        orderRepository.save(Order.create(discount, orderProducts));
+    private Discount processDiscount(List<OrderCreateReqDto> createReqDtos, boolean hasMembership) {
+        return discountService.calculateOrderDiscount(createReqDtos, hasMembership);
+
     }
 
     private void processPromotionOrder(int orderCount, Product product, List<OrderProduct> orderProducts) {
@@ -67,10 +69,6 @@ public class OrderService {
         orderProducts.add(
                 OrderProduct.create(product, product.getItem().getPrice(), orderCount)
         );
-    }
-
-    private int calculateOrderAmount(List<OrderProduct> orderProducts) {
-        return orderProducts.stream().mapToInt(OrderProduct::getTotalPrice).sum();
     }
 
     private Product getNoPromotionProduct(String itemName) {

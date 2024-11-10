@@ -1,6 +1,7 @@
 package store.convenience.order.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Order {
@@ -37,7 +38,7 @@ public class Order {
     }
 
     public List<OrderProduct> getOrderProducts() {
-        return orderProducts;
+        return Collections.unmodifiableList(orderProducts);
     }
 
     public Discount getDiscount() {

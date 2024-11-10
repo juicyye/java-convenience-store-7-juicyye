@@ -47,7 +47,7 @@ class DiscountServiceTest {
     @MethodSource("providedOrderData")
     void OrderDiscount(List<OrderCreateReqDto> orderCreateReqDtos, int expect) throws Exception {
         // when
-        Discount discount = discountService.calculateOrderDiscount(orderCreateReqDtos, true, 50);
+        Discount discount = discountService.calculateOrderDiscount(orderCreateReqDtos, true);
 
         // then
         assertAll(() -> {

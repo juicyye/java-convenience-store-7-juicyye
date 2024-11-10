@@ -1,6 +1,7 @@
 package store.convenience.order.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Discount {
@@ -20,7 +21,7 @@ public class Discount {
     }
 
     public List<ItemCount> getItemCounts() {
-        return itemCounts;
+        return Collections.unmodifiableList(itemCounts);
     }
 
     public int getPromotionDiscount() {

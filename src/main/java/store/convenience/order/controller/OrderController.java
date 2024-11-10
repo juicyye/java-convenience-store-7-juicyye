@@ -40,18 +40,21 @@ public class OrderController {
     public void start() {
         do {
             try {
-                showProductInventory();
-                List<OrderCreateReqDto> createReqDtos = purchaseOrderItem();
-                List<OrderCreateReqDto> updatedCreateReqDtos = new ArrayList<>();
-                processPromotions(createReqDtos, updatedCreateReqDtos);
-                orderService.process(updatedCreateReqDtos, hasMemberShip());
-                List<Order> orders = orderService.getAllOrders();
-                printReceipt(orders);
+                executeOrderFlow();
+                printReceipt();
             } catch (RuntimeException e) {
                 OutputView.printErrorMessage(e.getMessage());
             }
         } while (processRepurchase());
         inputView.close();
+    }
+
+    private void executeOrderFlow() {
+        showProductInventory();
+        List<OrderCreateReqDto> createReqDtos = purchaseOrderItem();
+        List<OrderCreateReqDto> updatedCreateReqDtos = new ArrayList<>();
+        processPromotions(createReqDtos, updatedCreateReqDtos);
+        orderService.process(updatedCreateReqDtos, hasMemberShip());
     }
 
     private void showProductInventory() {
@@ -110,7 +113,8 @@ public class OrderController {
         return createReqDto;
     }
 
-    private void printReceipt(List<Order> orders) {
+    private void printReceipt() {
+        List<Order> orders = orderService.getAllOrders();
         String message = orderMessageService.showReceipt(orders);
         OutputView.printReceipt(message);
     }
@@ -120,7 +124,6 @@ public class OrderController {
             OutputView.printMembership();
             return inputView.readCommand();
         });
-        OutputView.printMembership();
         return command.equals(Command.ACCEPT);
     }
 

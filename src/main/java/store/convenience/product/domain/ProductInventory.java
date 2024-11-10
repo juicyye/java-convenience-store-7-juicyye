@@ -1,5 +1,6 @@
 package store.convenience.product.domain;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ProductInventory {
@@ -11,7 +12,7 @@ public class ProductInventory {
     }
 
     public List<Product> getProducts() {
-        return products;
+        return Collections.unmodifiableList(products);
     }
 
 }

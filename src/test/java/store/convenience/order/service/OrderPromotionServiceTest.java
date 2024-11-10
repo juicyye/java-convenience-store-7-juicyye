@@ -74,13 +74,13 @@ class OrderPromotionServiceTest {
     @DisplayName("프로모션 이벤트 기간에 프로모션 수량을 넘어서 구매를 할 때 프로모션 할인 적용이 안되는 수량을 알려준다")
     void overPromotionCount() throws Exception {
         // given
-        OrderCreateReqDto createReqDto = createReqDto("콜라", 5, getDate());
+        OrderCreateReqDto createReqDto = createReqDto("콜라", 10, getDate());
 
         // when
         int result = orderPromotionService.determineExcessQuantity(createReqDto);
 
         // then
-        assertThat(result).isEqualTo(1);
+        assertThat(result).isEqualTo(4);
     }
 
     @Test
