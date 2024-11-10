@@ -95,6 +95,7 @@ public class OrderController {
             OutputView.printOverPromotionPurchase(createReqDto.itemName(), exceededCount);
             return inputView.readCommand();
         });
+
         if (command.equals(Command.REJECT)) {
             return orderAdjustmentService.excludeExceededQuantity(createReqDto, exceededCount);
         }
@@ -120,16 +121,17 @@ public class OrderController {
     }
 
     private boolean hasMemberShip() {
-        Command command = inputProcessor.execute(() -> {
+        return inputProcessor.execute(() -> {
             OutputView.printMembership();
-            return inputView.readCommand();
+            return inputView.readCommand().equals(Command.ACCEPT);
         });
-        return command.equals(Command.ACCEPT);
     }
 
     private boolean processRepurchase() {
-        OutputView.printRepurchase();
-        return inputView.readCommand().equals(Command.ACCEPT);
+        return inputProcessor.execute(() -> {
+            OutputView.printRepurchase();
+            return inputView.readCommand().equals(Command.ACCEPT);
+        });
     }
 
 }
