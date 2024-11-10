@@ -95,6 +95,7 @@ public class OrderController {
             OutputView.printOverPromotionPurchase(createReqDto.itemName(), exceededCount);
             return inputView.readCommand();
         });
+
         if (command.equals(Command.REJECT)) {
             return orderAdjustmentService.excludeExceededQuantity(createReqDto, exceededCount);
         }
