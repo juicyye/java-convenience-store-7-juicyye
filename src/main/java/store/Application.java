@@ -1,7 +1,22 @@
 package store;
 
+import store.convenience.order.controller.OrderController;
+import store.convenience.product.controller.ProductController;
+import store.convenience.promotion.controller.PromotionController;
+
 public class Application {
+
     public static void main(String[] args) {
-        // TODO: 프로그램 구현
+        AppConfig appConfig = new AppConfig();
+
+        PromotionController promotionController = appConfig.promotionController();
+        promotionController.start();
+
+        ProductController productController = appConfig.productController();
+        productController.start();
+
+        OrderController orderController = appConfig.orderController();
+        orderController.start();
     }
+
 }
