@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.convenience.order.domain.Discount;
@@ -19,6 +20,11 @@ import store.convenience.promotion.domain.Promotion;
 class OrderRepositoryImplTest {
 
     private OrderRepository orderRepository = OrderRepositoryImpl.getInstance();
+
+    @AfterEach
+    void tearDown() {
+        orderRepository.clear();
+    }
 
     @Test
     @DisplayName("최근에 주문한 내역을 찾을 수 있다")
