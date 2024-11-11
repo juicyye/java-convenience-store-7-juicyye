@@ -8,6 +8,7 @@ import store.convenience.product.domain.ProductInventory;
 import store.convenience.promotion.domain.Promotion;
 
 public class ProductMessageService {
+    private static final String OUT_OF_STOCK = "재고 없음 ";
 
     private final ProductService productService;
 
@@ -45,7 +46,7 @@ public class ProductMessageService {
     private String formatProductLine(Product product) {
         Integer quantity = product.getQuantity();
         if (quantity == 0) {
-            return "재고 없음 ";
+            return OUT_OF_STOCK;
         }
         return String.format("%s개 ", quantity);
     }
