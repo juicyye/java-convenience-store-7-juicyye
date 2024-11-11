@@ -21,6 +21,6 @@ public abstract class StoreConstant {
 
     public static final int DEFAULT_QUANTITY = 0;
     public static final int STANDARD_NUMBER = 0;
-    public static final int DISCOUNT_MULTIPLIER = 100;
+    public static final int DISCOUNT_MULTIPLIER = 1000;
 
 }

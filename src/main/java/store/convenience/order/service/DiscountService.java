@@ -41,7 +41,7 @@ public class DiscountService {
         return bonusQuantity * Item.of(createReqDto.itemName()).getPrice();
     }
 
-    public int calculateMembershipDiscount(int priceAfterPromotion, boolean hasMembership) {
+    private int calculateMembershipDiscount(int priceAfterPromotion, boolean hasMembership) {
         if (!hasMembership) {
             return 0;
         }
