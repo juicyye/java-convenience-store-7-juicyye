@@ -1,7 +1,9 @@
 package store.convenience.order.infrastructure;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import store.convenience.order.domain.Order;
 import store.convenience.order.service.port.OrderRepository;
 
@@ -23,8 +25,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> findAll() {
-        return orders;
+    public Optional<Order> findRecentOrder() {
+        return orders.stream()
+                .max(Comparator.comparing(Order::getCreatedAt));
     }
 
     @Override

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,7 @@ import store.convenience.promotion.domain.Promotion;
 import store.convenience.promotion.domain.PromotionDetails;
 import store.global.exception.NotEnoughStockException;
 import store.global.exception.ErrorMessage;
+import store.mock.FakeLocalDateTimeHolder;
 
 class OrderServiceTest {
 
@@ -31,7 +33,8 @@ class OrderServiceTest {
     private ProductRepository productRepository = ProductRepositoryImpl.getInstance();
     private OrderPromotionService orderPromotionService = new OrderPromotionService(productRepository);
     private final DiscountService discountService = new DiscountService(orderPromotionService);
-    private OrderService orderService = new OrderService(orderRepository, productRepository, discountService);
+    private FakeLocalDateTimeHolder localDateTimeHolder = new FakeLocalDateTimeHolder(LocalDateTime.of(2024, 11, 11, 11, 45));
+    private OrderService orderService = new OrderService(orderRepository, productRepository, discountService,localDateTimeHolder);
 
     @BeforeEach
     void setUp() {
@@ -59,15 +62,13 @@ class OrderServiceTest {
         orderService.process(request, true);
 
         // when
-        List<Order> results = orderRepository.findAll();
+        Order result = orderRepository.findRecentOrder().orElse(null);
 
         // then
-        assertThat(results)
-                .flatExtracting(Order::getOrderProducts)
+        assertThat(result.getOrderProducts()).isNotNull()
                 .extracting(
-                        orderProduct -> orderProduct.getProduct().getItem(),
-                        OrderProduct::getCount
-                )
+                        orderProduct -> orderProduct.getProduct().getItem()
+                        , OrderProduct::getCount)
                 .containsExactlyInAnyOrder(
                         tuple(Item.ORANGE_JUICE, 4)
                 );
@@ -81,14 +82,14 @@ class OrderServiceTest {
         orderService.process(request, true);
 
         // when
-        List<Order> results = orderRepository.findAll();
+        Order result = orderRepository.findRecentOrder().orElse(null);
 
         // then
-        assertThat(results)
+        assertThat(result).isNotNull()
                 .extracting(Order::getDiscount)
                 .extracting(Discount::getPromotionDiscount, Discount::getMembershipDiscount, Discount::getTotalDiscount)
                 .containsExactlyInAnyOrder(
-                        tuple(3600, (int) Math.floor(3600 * 0.3) / 100 * 100, 4600)
+                        3600, (int) Math.floor(3600 * 0.3) / 100 * 100, 4600
                 );
     }
 

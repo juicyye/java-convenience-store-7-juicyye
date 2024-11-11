@@ -9,17 +9,17 @@ import java.util.List;
 import java.util.regex.Pattern;
 import store.convenience.order.controller.Command;
 import store.convenience.order.controller.req.OrderCreateReqDto;
-import store.convenience.order.service.port.DateTimeHolder;
+import store.convenience.order.service.port.LocalDateTimeHolder;
 import store.global.exception.ErrorMessage;
 import store.global.util.Parser;
 import store.global.util.StoreConstant;
 
 public class InputHandler {
 
-    private final DateTimeHolder dateTimeHolder;
+    private final LocalDateTimeHolder localDateTimeHolder;
 
-    public InputHandler(DateTimeHolder dateTimeHolder) {
-        this.dateTimeHolder = dateTimeHolder;
+    public InputHandler(LocalDateTimeHolder localDateTimeHolder) {
+        this.localDateTimeHolder = localDateTimeHolder;
     }
 
     public List<OrderCreateReqDto> parseOrderRequests(String input) {
@@ -42,7 +42,7 @@ public class InputHandler {
         String name = orderParts[NAME_INDEX];
         String count = orderParts[COUNT_INDEX];
         OrderCreateReqDto createReqDto = new OrderCreateReqDto(name, Parser.convertToInt(count),
-                dateTimeHolder.now().toLocalDate());
+                localDateTimeHolder.now().toLocalDate());
         createReqDtos.add(createReqDto);
     }
 

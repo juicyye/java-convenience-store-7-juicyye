@@ -9,14 +9,12 @@ import store.convenience.product.domain.Product;
 
 public class OrderMessageService {
 
-    public String showReceipt(List<Order> orders) {
+    public String showReceipt(Order order) {
         StringBuilder sb = new StringBuilder();
-        for (Order order : orders) {
-            printReceiptHeader(sb);
-            printOrderProducts(order, sb);
-            printPromotionProducts(order, sb);
-            printSummary(order, sb);
-        }
+        printReceiptHeader(sb);
+        printOrderProducts(order, sb);
+        printPromotionProducts(order, sb);
+        printSummary(order, sb);
         return sb.toString();
     }
 
@@ -64,10 +62,10 @@ public class OrderMessageService {
         int finalAmount = order.getTotalPrice() - discount.getTotalDiscount();
 
         sb.append("=====================================\n");
-        printTotalPrice(order,sb);
-        printEventDiscount(discount,sb);
+        printTotalPrice(order, sb);
+        printEventDiscount(discount, sb);
         printMembershipDiscount(discount, sb);
-        printFinalPrice(finalAmount,sb);
+        printFinalPrice(finalAmount, sb);
     }
 
     private void printTotalPrice(Order order, StringBuilder sb) {
@@ -107,11 +105,11 @@ public class OrderMessageService {
     }
 
     private String addPaddingEventDiscount(String input) {
-        return String.format("%-25s",input);
+        return String.format("%-25s", input);
     }
 
     private String addPaddingMembershipDiscount(String input) {
-        return String.format("%-24s",input);
+        return String.format("%-24s", input);
     }
 
     private String formatWithMinus(int number) {

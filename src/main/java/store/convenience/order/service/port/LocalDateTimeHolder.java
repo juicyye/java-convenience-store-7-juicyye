@@ -2,7 +2,7 @@ package store.convenience.order.service.port;
 
 import java.time.LocalDateTime;
 
-public interface DateTimeHolder {
+public interface LocalDateTimeHolder {
 
     LocalDateTime now();
 

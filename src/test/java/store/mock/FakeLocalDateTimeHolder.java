@@ -1,13 +1,13 @@
 package store.mock;
 
 import java.time.LocalDateTime;
-import store.convenience.order.service.port.DateTimeHolder;
+import store.convenience.order.service.port.LocalDateTimeHolder;
 
-public class FakeDateTimeHolder implements DateTimeHolder {
+public class FakeLocalDateTimeHolder implements LocalDateTimeHolder {
 
     private LocalDateTime localDateTime;
 
-    public FakeDateTimeHolder(LocalDateTime localDateTime) {
+    public FakeLocalDateTimeHolder(LocalDateTime localDateTime) {
         this.localDateTime = localDateTime;
     }
 

@@ -1,13 +1,13 @@
 package store.convenience.order.service.port;
 
-import java.util.List;
+import java.util.Optional;
 import store.convenience.order.domain.Order;
 
 public interface OrderRepository {
 
     void save(Order order);
 
-    List<Order> findAll();
+    Optional<Order> findRecentOrder();
 
     void clear();
 

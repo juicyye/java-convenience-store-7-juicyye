@@ -6,8 +6,8 @@ import store.convenience.order.controller.req.OrderCreateReqDto;
 import store.convenience.order.domain.Discount;
 import store.convenience.order.domain.Order;
 import store.convenience.order.domain.OrderProduct;
+import store.convenience.order.service.port.LocalDateTimeHolder;
 import store.convenience.order.service.port.OrderRepository;
-import store.convenience.product.domain.Item;
 import store.convenience.product.domain.Product;
 import store.convenience.product.service.port.ProductRepository;
 import store.global.exception.NotEnoughStockException;
@@ -19,12 +19,15 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final DiscountService discountService;
+    private final LocalDateTimeHolder localDateTimeHolder;
 
     public OrderService(OrderRepository orderRepository,
-                        ProductRepository productRepository, DiscountService discountService) {
+                        ProductRepository productRepository, DiscountService discountService,
+                        LocalDateTimeHolder localDateTimeHolder) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.discountService = discountService;
+        this.localDateTimeHolder = localDateTimeHolder;
     }
 
     public void process(List<OrderCreateReqDto> createReqDtos, boolean hasMembership) {
@@ -35,7 +38,7 @@ public class OrderService {
             handlerOrder(createReqDto, orderProducts);
         }
 
-        orderRepository.save(Order.create(discount, orderProducts));
+        orderRepository.save(Order.create(discount, orderProducts,localDateTimeHolder.now()));
     }
 
     private void handlerOrder(OrderCreateReqDto createReqDto, List<OrderProduct> orderProducts) {
@@ -84,8 +87,9 @@ public class OrderService {
                         ErrorMessage.NOT_FOUND_PRODUCT.getMessage()));
     }
 
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public Order getLatestOrder() {
+        return orderRepository.findRecentOrder().orElseThrow(() ->
+                new NotFoundException(ErrorMessage.NOT_FOUND_ORDER.getMessage()));
     }
 
 }

@@ -1,5 +1,6 @@
 package store.convenience.order.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,13 +9,15 @@ public class Order {
 
     private List<OrderProduct> orderProducts = new ArrayList<>();
     private Discount discount;
+    private LocalDateTime createdAt;
 
     private Order() {
     }
 
-    public static Order create(Discount discount, List<OrderProduct> orderProducts) {
+    public static Order create(Discount discount, List<OrderProduct> orderProducts, LocalDateTime createdAt) {
         Order order = new Order();
         order.discount = discount;
+        order.createdAt = createdAt;
         for (OrderProduct orderProduct : orderProducts) {
             order.addOrderProduct(orderProduct);
         }
@@ -44,4 +47,9 @@ public class Order {
     public Discount getDiscount() {
         return discount;
     }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
 }

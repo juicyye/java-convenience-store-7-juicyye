@@ -115,8 +115,8 @@ public class OrderController {
     }
 
     private void printReceipt() {
-        List<Order> orders = orderService.getAllOrders();
-        String message = orderMessageService.showReceipt(orders);
+        Order order = orderService.getLatestOrder();
+        String message = orderMessageService.showReceipt(order);
         OutputView.printReceipt(message);
     }
 

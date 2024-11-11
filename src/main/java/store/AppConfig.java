@@ -5,13 +5,13 @@ import store.convenience.order.controller.input.InputHandler;
 import store.convenience.order.controller.input.InputProcessor;
 import store.convenience.order.controller.input.InputView;
 import store.convenience.order.infrastructure.OrderRepositoryImpl;
-import store.convenience.order.infrastructure.StoreDateTimeHolder;
+import store.convenience.order.infrastructure.StoreLocalDateTimeHolder;
 import store.convenience.order.service.DiscountService;
 import store.convenience.order.service.OrderAdjustmentService;
 import store.convenience.order.service.OrderMessageService;
 import store.convenience.order.service.OrderPromotionService;
 import store.convenience.order.service.OrderService;
-import store.convenience.order.service.port.DateTimeHolder;
+import store.convenience.order.service.port.LocalDateTimeHolder;
 import store.convenience.order.service.port.OrderRepository;
 import store.convenience.product.controller.ProductController;
 import store.convenience.product.infrastructure.ProductRepositoryImpl;
@@ -56,7 +56,8 @@ public class AppConfig {
     }
 
     private OrderService orderService() {
-        return new OrderService(orderRepository(), productRepository(), discountService());
+        return new OrderService(orderRepository(), productRepository(),
+                discountService(), localDateTimeHolder());
     }
 
     private OrderPromotionService checkService() {
@@ -99,12 +100,12 @@ public class AppConfig {
      * 기타
      */
 
-    private DateTimeHolder dateTimeHolder() {
-        return StoreDateTimeHolder.getInstance();
+    private LocalDateTimeHolder localDateTimeHolder() {
+        return StoreLocalDateTimeHolder.getInstance();
     }
 
     private InputHandler inputHandler() {
-        return new InputHandler(dateTimeHolder());
+        return new InputHandler(localDateTimeHolder());
     }
 
     private InputView inputView() {

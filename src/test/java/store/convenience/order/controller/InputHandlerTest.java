@@ -12,14 +12,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import store.convenience.order.controller.input.InputHandler;
 import store.convenience.order.controller.req.OrderCreateReqDto;
-import store.convenience.order.service.port.DateTimeHolder;
+import store.convenience.order.service.port.LocalDateTimeHolder;
 import store.global.exception.ErrorMessage;
-import store.mock.FakeDateTimeHolder;
+import store.mock.FakeLocalDateTimeHolder;
 
 class InputHandlerTest {
 
-    private final DateTimeHolder dateTimeHolder = new FakeDateTimeHolder(LocalDateTime.of(2024, 11, 7, 9, 34));
-    private InputHandler inputHandler = new InputHandler(dateTimeHolder);
+    private final LocalDateTimeHolder localDateTimeHolder = new FakeLocalDateTimeHolder(LocalDateTime.of(2024, 11, 7, 9, 34));
+    private InputHandler inputHandler = new InputHandler(localDateTimeHolder);
 
     @Test
     @DisplayName("올바른 값을 입력하면 orderCreateDto로 반환해준다")

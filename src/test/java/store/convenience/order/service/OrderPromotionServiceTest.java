@@ -21,13 +21,13 @@ import store.convenience.promotion.domain.Promotion;
 import store.convenience.promotion.domain.PromotionDetails;
 import store.convenience.promotion.infrastrcuture.PromotionRepositoryImpl;
 import store.convenience.promotion.service.port.PromotionRepository;
-import store.mock.FakeDateTimeHolder;
+import store.mock.FakeLocalDateTimeHolder;
 
 class OrderPromotionServiceTest {
 
     private final ProductRepository productRepository = ProductRepositoryImpl.getInstance();
     private final PromotionRepository promotionRepository = PromotionRepositoryImpl.getInstance();
-    private final FakeDateTimeHolder fakeDateTimeHolder = new FakeDateTimeHolder(
+    private final FakeLocalDateTimeHolder fakeDateTimeHolder = new FakeLocalDateTimeHolder(
             LocalDateTime.of(2024, 5, 5, 12, 38, 45));
     private final OrderPromotionService orderPromotionService = new OrderPromotionService(productRepository);
 
