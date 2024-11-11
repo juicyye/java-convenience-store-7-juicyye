@@ -10,17 +10,12 @@ import java.util.regex.Pattern;
 import store.convenience.order.controller.Command;
 import store.convenience.order.controller.req.OrderCreateReqDto;
 import store.convenience.order.service.port.LocalDateTimeHolder;
+import store.convenience.product.domain.Item;
 import store.global.exception.ErrorMessage;
 import store.global.util.Parser;
 import store.global.util.StoreConstant;
 
 public class InputHandler {
-
-    private final LocalDateTimeHolder localDateTimeHolder;
-
-    public InputHandler(LocalDateTimeHolder localDateTimeHolder) {
-        this.localDateTimeHolder = localDateTimeHolder;
-    }
 
     public List<OrderCreateReqDto> parseOrderRequests(String input) {
         List<OrderCreateReqDto> createReqDtos = new ArrayList<>();
@@ -41,8 +36,7 @@ public class InputHandler {
     private void createOrderDto(List<OrderCreateReqDto> createReqDtos, String[] orderParts) {
         String name = orderParts[NAME_INDEX];
         String count = orderParts[COUNT_INDEX];
-        OrderCreateReqDto createReqDto = new OrderCreateReqDto(name, Parser.convertToInt(count),
-                localDateTimeHolder.now().toLocalDate());
+        OrderCreateReqDto createReqDto = new OrderCreateReqDto(Item.of(name), Parser.convertToInt(count));
         createReqDtos.add(createReqDto);
     }
 

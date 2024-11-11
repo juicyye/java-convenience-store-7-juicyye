@@ -19,9 +19,8 @@ public class OrderAdjustmentService {
 
     private OrderCreateReqDto applyQuantityAdjustment(OrderCreateReqDto createReqDto, int adjustmentCount) {
         return new OrderCreateReqDto(
-                createReqDto.itemName(),
-                createReqDto.count() + adjustmentCount,
-                createReqDto.currentDate()
+                createReqDto.item(),
+                createReqDto.count() + adjustmentCount
         );
     }
 

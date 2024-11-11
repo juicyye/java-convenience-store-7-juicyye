@@ -19,14 +19,16 @@ import store.convenience.promotion.service.port.PromotionRepository;
 
 class OrderAdjustmentServiceTest {
 
+    private LocalDate localDate = LocalDate.of(2024, 11, 11);
+
     private final ProductRepository productRepository = ProductRepositoryImpl.getInstance();
     private final OrderAdjustmentService orderAdjustmentService = new OrderAdjustmentService();
     private final PromotionRepository promotionRepository = PromotionRepositoryImpl.getInstance();
 
     @BeforeEach
     void setUp() {
-        Promotion promotion = new Promotion(getDetails("탄산2+1", 2, 1), getDate(), getDate());
-        Promotion promotion2 = new Promotion(getDetails("오렌지주스", 1, 1), getDate(), getDate());
+        Promotion promotion = new Promotion(getDetails("탄산2+1", 2, 1), localDate, localDate);
+        Promotion promotion2 = new Promotion(getDetails("오렌지주스", 1, 1), localDate, localDate);
         Product product = new Product(Item.COLA, 7, promotion);
         Product product2 = new Product(Item.ORANGE_JUICE, 9, promotion2);
         productRepository.save(product);
@@ -41,9 +43,9 @@ class OrderAdjustmentServiceTest {
 
     @Test
     @DisplayName("보너스 상품을 추가하면 orderCount가 +1 더해진다")
-    void 이름_calculateBonusQuantity() throws Exception {
+    void calculateBonusQuantity() throws Exception {
         // given
-        OrderCreateReqDto createReqDto = createReqDto("오렌지주스", 1, getDate());
+        OrderCreateReqDto createReqDto = createReqDto(Item.ORANGE_JUICE, 1);
 
         // when
         OrderCreateReqDto result = orderAdjustmentService.applyBonus(createReqDto, 1);
@@ -52,12 +54,21 @@ class OrderAdjustmentServiceTest {
         assertThat(result.count()).isEqualTo(2);
     }
 
-    private static OrderCreateReqDto createReqDto(String itemName, int count, LocalDate date) {
-        return new OrderCreateReqDto(itemName, count, date);
+    @Test
+    @DisplayName("초과한 상품의 개수만큼 수량에서 뺀다")
+    void excludeExceededQuantity() throws Exception {
+        // given
+        OrderCreateReqDto createReqDto = createReqDto(Item.ORANGE_JUICE, 5);
+
+        // when
+        OrderCreateReqDto result = orderAdjustmentService.excludeExceededQuantity(createReqDto, 2);
+
+        // then
+        assertThat(result.count()).isEqualTo(3);
     }
 
-    private static LocalDate getDate() {
-        return LocalDate.of(2024, 5, 5);
+    private OrderCreateReqDto createReqDto(Item item, int count) {
+        return new OrderCreateReqDto(item, count);
     }
 
     private PromotionDetails getDetails(String name, int buy, int get) {

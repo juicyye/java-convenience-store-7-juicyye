@@ -48,8 +48,8 @@ public class Product {
         return 0;
     }
 
-    public int calculateBonusQuantity(int orderCount, LocalDate localDate) {
-        if (canApplyPromotion(localDate)) {
+    public int calculateBonusQuantity(int orderCount, LocalDate currentDate) {
+        if (canApplyPromotion(currentDate)) {
             int availableCount = Math.min(orderCount, quantity);
             return promotion.calculateBonus(availableCount);
         }

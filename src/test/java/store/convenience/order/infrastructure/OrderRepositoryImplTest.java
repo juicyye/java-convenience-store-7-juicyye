@@ -47,11 +47,11 @@ class OrderRepositoryImplTest {
                 .isEqualTo(LocalDateTime.of(2024,11,11,12,01));
     }
 
-    private static List<OrderProduct> getOrderProducts() {
+    private List<OrderProduct> getOrderProducts() {
         return List.of(OrderProduct.create(new Product(Item.COLA, 3, new Promotion(null, LocalDate.now(), LocalDate.now())), 3, 2));
     }
 
-    private static Discount getDiscount() {
+    private Discount getDiscount() {
         return new Discount(List.of(new ItemCount(Item.COLA, 3)), 30, 20);
     }
 

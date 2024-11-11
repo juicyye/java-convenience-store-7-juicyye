@@ -92,7 +92,7 @@ public class OrderController {
 
     private OrderCreateReqDto handleExceededPromotion(OrderCreateReqDto createReqDto, int exceededCount) {
         Command command = inputProcessor.execute(() -> {
-            OutputView.printOverPromotionPurchase(createReqDto.itemName(), exceededCount);
+            OutputView.printOverPromotionPurchase(createReqDto.item().getName(), exceededCount);
             return inputView.readCommand();
         });
 
@@ -104,7 +104,7 @@ public class OrderController {
 
     private OrderCreateReqDto handleBonusPromotion(OrderCreateReqDto createReqDto, int bonusCount) {
         Command command = inputProcessor.execute(() -> {
-            OutputView.printPromotion(createReqDto.itemName(), bonusCount);
+            OutputView.printPromotion(createReqDto.item().getName(), bonusCount);
             return inputView.readCommand();
         });
 

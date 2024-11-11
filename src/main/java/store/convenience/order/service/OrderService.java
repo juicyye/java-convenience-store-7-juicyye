@@ -1,5 +1,7 @@
 package store.convenience.order.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import store.convenience.order.controller.req.OrderCreateReqDto;
@@ -10,9 +12,9 @@ import store.convenience.order.service.port.LocalDateTimeHolder;
 import store.convenience.order.service.port.OrderRepository;
 import store.convenience.product.domain.Product;
 import store.convenience.product.service.port.ProductRepository;
+import store.global.exception.ErrorMessage;
 import store.global.exception.NotEnoughStockException;
 import store.global.exception.NotFoundException;
-import store.global.exception.ErrorMessage;
 
 public class OrderService {
 
@@ -31,29 +33,33 @@ public class OrderService {
     }
 
     public void process(List<OrderCreateReqDto> createReqDtos, boolean hasMembership) {
-        Discount discount = processDiscount(createReqDtos, hasMembership);
+        LocalDateTime currentDate = localDateTimeHolder.now();
+        Discount discount = processDiscount(createReqDtos, hasMembership, currentDate.toLocalDate());
 
         List<OrderProduct> orderProducts = new ArrayList<>();
         for (OrderCreateReqDto createReqDto : createReqDtos) {
-            handlerOrder(createReqDto, orderProducts);
+            handlerOrder(createReqDto, orderProducts, currentDate);
         }
 
-        orderRepository.save(Order.create(discount, orderProducts,localDateTimeHolder.now()));
+        orderRepository.save(Order.create(discount, orderProducts, currentDate));
     }
 
-    private void handlerOrder(OrderCreateReqDto createReqDto, List<OrderProduct> orderProducts) {
-        Product product = getProduct(createReqDto.itemName());
-        if (product.canApplyPromotion(createReqDto.currentDate())) {
+    private void handlerOrder(OrderCreateReqDto createReqDto, List<OrderProduct> orderProducts,
+                              LocalDateTime currentTime) {
+        Product product = getProduct(createReqDto.item().getName());
+        if (product.canApplyPromotion(currentTime.toLocalDate())) {
             processPromotionOrder(createReqDto.count(), product, orderProducts);
         }
 
-        if (!product.canApplyPromotion(createReqDto.currentDate())) {
+        if (!product.canApplyPromotion(currentTime.toLocalDate())) {
             processRegularOrder(createReqDto.count(), product, orderProducts);
         }
     }
 
-    private Discount processDiscount(List<OrderCreateReqDto> createReqDtos, boolean hasMembership) {
-        return discountService.calculateOrderDiscount(createReqDtos, hasMembership);
+    private Discount processDiscount(List<OrderCreateReqDto> createReqDtos, boolean hasMembership,
+                                     LocalDate currentDate) {
+        return discountService.calculateOrderDiscount(createReqDtos, hasMembership,
+                currentDate);
 
     }
 

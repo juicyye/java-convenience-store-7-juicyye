@@ -61,7 +61,7 @@ public class AppConfig {
     }
 
     private OrderPromotionService checkService() {
-        return new OrderPromotionService(productRepository());
+        return new OrderPromotionService(productRepository(),localDateTimeHolder());
     }
 
     private OrderAdjustmentService orderAdjustmentService() {
@@ -105,7 +105,7 @@ public class AppConfig {
     }
 
     private InputHandler inputHandler() {
-        return new InputHandler(localDateTimeHolder());
+        return new InputHandler();
     }
 
     private InputView inputView() {
